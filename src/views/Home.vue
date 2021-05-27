@@ -2,6 +2,21 @@
   <div>
     <div class="img__header white--text">
       <div class="img__content pt-5 pr-5">
+        <div
+          class="d-flex justify-center align-center loading__content"
+          v-if="!show"
+        >
+          <div class="text-center">
+            <div class="pb-5">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+              ></v-progress-circular>
+            </div>
+            <span>Cargando estado del tiempo...</span>
+          </div>
+        </div>
+
         <div v-if="show">
           <h1 class="white--text text-h5 font-weight-bold mb-3">
             {{ ciudad }}
@@ -81,5 +96,9 @@ export default {
 .img__content {
   background: rgba(0, 0, 0, 0.5);
   height: 100%;
+}
+
+.loading__content {
+  height: 97%;
 }
 </style>
