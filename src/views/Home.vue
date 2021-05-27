@@ -2,20 +2,24 @@
   <div>
     <div class="img__header white--text">
       <div class="img__content pt-5 pr-5">
-        <h1 class="white--text text-h5 font-weight-bold mb-3">{{ ciudad }}</h1>
-        <div class="mb-3">
-          <p class="mb-0">Temperatura actual</p>
-          <div class="d-flex justify-end align-end">
-            <img :src="imagen" alt="" height="30px" />
-            <span class="font-weight-bold">{{ temperatura }}</span>
+        <div v-if="show">
+          <h1 class="white--text text-h5 font-weight-bold mb-3">
+            {{ ciudad }}
+          </h1>
+          <div class="mb-3">
+            <p class="mb-0">Temperatura actual</p>
+            <div class="d-flex justify-end align-end">
+              <img :src="imagen" alt="" height="30px" />
+              <span class="font-weight-bold">{{ temperatura }}</span>
+            </div>
           </div>
-        </div>
 
-        <div>
-          <p class="mb-0">Sensación térmica</p>
-          <div class="d-flex justify-end align-end">
-            <img :src="imagen" alt="" height="30px" />
-            <span class="font-weight-bold">{{ sensacionTermica }}</span>
+          <div>
+            <p class="mb-0">Sensación térmica</p>
+            <div class="d-flex justify-end align-end">
+              <img :src="imagen" alt="" height="30px" />
+              <span class="font-weight-bold">{{ sensacionTermica }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -37,18 +41,21 @@ export default {
     temperatura: "",
     sensacionTermica: "",
     imagen: "",
+    show: false,
   }),
   methods: {
     async datosClima() {
       try {
         const { data } = await axios.get(
-          `http://api.openweathermap.org/data/2.5/weather?q=nanchital&units=metric&lang=es&appid=4dab257d25d0f100b931220c089613dc`
+          `https://api.openweathermap.org/data/2.5/weather?q=nanchital&units=metric&lang=es&appid=4dab257d25d0f100b931220c089613dc`
         );
 
         this.ciudad = data.name;
         this.temperatura = `${data.main.temp}°С`;
         this.sensacionTermica = `${data.main.feels_like}°С`;
         this.imagen = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+
+        this.show = true;
       } catch (error) {
         console.warn(error);
       }
