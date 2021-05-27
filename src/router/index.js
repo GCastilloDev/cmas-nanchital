@@ -1,29 +1,91 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/",
+    name: "Home",
+    component: Home,
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
-]
+  {
+    path: "/nosotros",
+    name: "Nosotros",
+    component: () =>
+      import(/* webpackChunkName: "Nosotros" */ "../views/Nosotros.vue"),
+  },
+  {
+    path: "/pagos/servicios",
+    name: "PagoServicios",
+    component: () =>
+      import(
+        /* webpackChunkName: "PagoServicios" */ "../views/PagoServicios.vue"
+      ),
+  },
+  {
+    path: "/pagos/historial",
+    name: "HistorialPagos",
+    component: () =>
+      import(
+        /* webpackChunkName: "HistorialPagos" */ "../views/HistorialPagos.vue"
+      ),
+  },
+  {
+    path: "/contacto",
+    name: "Contacto",
+    component: () =>
+      import(/* webpackChunkName: "Contacto" */ "../views/Contacto.vue"),
+  },
+  {
+    path: "/reportes/generar-reporte",
+    name: "GenerarReporte",
+    component: () =>
+      import(
+        /* webpackChunkName: "GenerarReporte" */ "../views/GenerarReporte.vue"
+      ),
+  },
+  {
+    path: "/reportes/estatus-reporte",
+    name: "EstatusReporte",
+    component: () =>
+      import(
+        /* webpackChunkName: "EstatusReporte" */ "../views/EstatusReporte.vue"
+      ),
+  },
+  {
+    path: "/cuidado-del-agua",
+    name: "CuidadoDelAgua",
+    component: () =>
+      import(
+        /* webpackChunkName: "CuidadoDelAgua" */ "../views/CuidadoDelAgua.vue"
+      ),
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () =>
+      import(/* webpackChunkName: "Login" */ "../views/Login.vue"),
+  },
+  {
+    path: "/login/recuperar-contrasena",
+    name: "RecuperarPassword",
+    component: () =>
+      import(/* webpackChunkName: "RecuperarPassword" */ "../views/RecuperarPassword.vue"),
+  },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: () =>
+      import(/* webpackChunkName: "Admin" */ "../views/Admin.vue"),
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;
