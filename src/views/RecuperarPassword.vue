@@ -1,33 +1,39 @@
 <template>
   <div class="login d-flex align-center">
-    <v-row class="justify-center">
-      <v-col cols="5">
-        <h1 class="text-h4 font-weight-bold">Recuperar contraseña</h1>
-        <div class="mt-5">
-          <p>Favor de ingresar tu usuario</p>
-          <v-text-field
-            color="#2EBA73"
-            class="rounded-pill"
-            placeholder="Usuario"
-            prepend-inner-icon="mdi-account"
-            solo
-          ></v-text-field>
-        </div>
-        <v-row>
-          <v-col cols="12" class="text-right">
-            <v-btn
-              @click="recuperarContrasena"
-              class="rounded-pill text-none font-weight-regular px-7"
+    <v-container>
+      <v-row class="justify-center">
+        <v-col lg="6" md="8" sm="10" cols="12">
+          <h1 class="text-h4 font-weight-bold">Recuperar contraseña</h1>
+          <h2 class="text-h6 font-weight-regular text-sm-h5">
+            Favor de ingresar tu usuario
+          </h2>
+          <div class="mt-5">
+            <v-text-field
               color="#2EBA73"
-              dark
-              depressed
-              >Recuperar contraseña
-              <v-icon>mdi-chevron-double-right</v-icon></v-btn
-            >
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
+              class="rounded-pill"
+              placeholder="Usuario"
+              prepend-inner-icon="mdi-account"
+              solo
+            ></v-text-field>
+          </div>
+
+          <v-row class="d-flex justify-end">
+            <v-col cols="12" sm="6">
+              <v-btn
+                @click="recuperarContrasena"
+                block
+                class="rounded-pill text-none font-weight-regular"
+                color="#2EBA73"
+                dark
+                depressed
+                >Recurar contraseña
+                <v-icon right>mdi-chevron-double-right</v-icon></v-btn
+              >
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 

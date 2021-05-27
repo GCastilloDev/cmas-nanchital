@@ -4,7 +4,9 @@
       <v-row class="justify-center">
         <v-col lg="6" md="8" sm="10" cols="12">
           <h2 class="text-h4 font-weight-bold">Bienvenido de nuevo!</h2>
-          <h1 class="text-h5">Favor de iniciar sesión en tu cuenta</h1>
+          <h1 class="text-h6 font-weight-regular text-sm-h5">
+            Favor de iniciar sesión en tu cuenta
+          </h1>
           <div class="mt-5">
             <v-text-field
               color="#2EBA73"
@@ -36,7 +38,11 @@
                 >Iniciar sesión</v-btn
               >
             </v-col>
-            <v-col cols="12" sm="6" class="d-flex align-end justify-sm-end justify-center">
+            <v-col
+              cols="12"
+              sm="6"
+              class="d-flex align-end justify-sm-end justify-center"
+            >
               <router-link :to="{ name: 'RecuperarPassword' }" class="link">
                 Recuperar contraseña
               </router-link>
