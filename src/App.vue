@@ -16,88 +16,91 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        class="black--text text-capitalize"
-        color="white"
-        depressed
-        :to="{ name: 'Nosotros' }"
-        >Nosotros</v-btn
-      >
-      <v-menu offset-y open-on-hover>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="black--text text-capitalize"
-            color="white"
-            depressed
-            v-bind="attrs"
-            v-on="on"
-          >
-            Pagos <v-icon right> mdi-chevron-down </v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="(item, index) in pagos"
-            :key="index"
-            link
-            :to="{ name: item.to }"
-          >
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn
-        class="black--text text-capitalize"
-        color="white"
-        depressed
-        :to="{ name: 'Contacto' }"
-        >Contacto</v-btn
-      >
-      <v-menu offset-y open-on-hover>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            class="black--text text-capitalize"
-            color="white"
-            depressed
-            v-bind="attrs"
-            v-on="on"
-          >
-            Reportes <v-icon right> mdi-chevron-down </v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="(item, index) in reportes"
-            :key="index"
-            link
-            :to="{ name: item.to }"
-          >
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn
-        class="black--text text-capitalize"
-        color="white"
-        depressed
-        :to="{ name: 'CuidadoDelAgua' }"
-        >Cuidado del agua</v-btn
-      >
-      <v-btn
-        class="rounded-pill text-capitalize"
-        color="#01AB55"
-        dark
-        depressed
-        :to="{ name: 'Login' }"
-        >Login</v-btn
-      >
-      <v-btn
-        class="black--text text-capitalize"
-        color="white"
-        depressed
-        :to="{ name: 'Admin' }"
-        >Admin</v-btn
-      >
+      <div class="d-none d-md-flex">
+        <v-btn
+          class="black--text text-capitalize"
+          color="white"
+          depressed
+          :to="{ name: 'Nosotros' }"
+          >Nosotros</v-btn
+        >
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="black--text text-capitalize"
+              color="white"
+              depressed
+              v-bind="attrs"
+              v-on="on"
+            >
+              Pagos <v-icon right> mdi-chevron-down </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in pagos"
+              :key="index"
+              link
+              :to="{ name: item.to }"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-btn
+          class="black--text text-capitalize"
+          color="white"
+          depressed
+          :to="{ name: 'Contacto' }"
+          >Contacto</v-btn
+        >
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="black--text text-capitalize"
+              color="white"
+              depressed
+              v-bind="attrs"
+              v-on="on"
+            >
+              Reportes <v-icon right> mdi-chevron-down </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in reportes"
+              :key="index"
+              link
+              :to="{ name: item.to }"
+            >
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-btn
+          class="black--text text-capitalize"
+          color="white"
+          depressed
+          :to="{ name: 'CuidadoDelAgua' }"
+          >Cuidado del agua</v-btn
+        >
+        <v-btn
+          class="rounded-pill text-capitalize"
+          color="#01AB55"
+          dark
+          depressed
+          :to="{ name: 'Login' }"
+          >Login</v-btn
+        >
+        <v-btn
+          class="black--text text-capitalize"
+          color="white"
+          depressed
+          :to="{ name: 'Admin' }"
+          >Admin</v-btn
+        >
+      </div>
+      <v-app-bar-nav-icon class="d-md-none" color="black"></v-app-bar-nav-icon>
     </v-app-bar>
 
     <v-main>
