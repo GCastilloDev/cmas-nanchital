@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar app color="white" dark>
+    <v-app-bar color="white" dark>
       <router-link :to="{ name: 'Home' }">
         <div class="d-flex align-center">
           <v-img
@@ -123,7 +123,6 @@
         color="black"
       ></v-app-bar-nav-icon>
     </v-app-bar>
-
     <navigation-drawer
       :drawer="drawer"
       @close="drawer = !drawer"

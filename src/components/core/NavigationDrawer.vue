@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="localDrawer" absolute temporary right>
+  <v-navigation-drawer v-model="localDrawer" absolute temporary right >
     <v-list dense>
       <v-list-item link :to="{ name: 'Nosotros' }" active-class="activeClass">
         <v-list-item-content>
