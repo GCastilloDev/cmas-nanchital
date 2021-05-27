@@ -11,8 +11,8 @@
             <v-text-field
               color="#2EBA73"
               class="rounded-pill"
-              placeholder="Usuario"
-              prepend-inner-icon="mdi-account"
+              placeholder="Correo"
+              prepend-inner-icon="mdi-email"
               solo
             ></v-text-field>
           </div>
@@ -26,7 +26,7 @@
                 color="#2EBA73"
                 dark
                 depressed
-                >Recurar contraseña
+                >Recuperar contraseña
                 <v-icon right>mdi-chevron-double-right</v-icon></v-btn
               >
             </v-col>

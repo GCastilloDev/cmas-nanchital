@@ -11,8 +11,8 @@
             <v-text-field
               color="#2EBA73"
               class="rounded-pill"
-              placeholder="Usuario"
-              prepend-inner-icon="mdi-account"
+              placeholder="Correo"
+              prepend-inner-icon="mdi-email"
               solo
             ></v-text-field>
           </div>
@@ -49,7 +49,7 @@
             </v-col>
             <v-col cols="12" class="text-center"
               ><span>¿No tienes cuenta? </span>
-              <router-link :to="{ name: 'RecuperarPassword' }">
+              <router-link :to="{ name: 'Registrate' }">
                 Registrate aquí
               </router-link>
             </v-col>

@@ -81,6 +81,12 @@ const routes = [
       ),
   },
   {
+    path: "/login/registrate",
+    name: "Registrate",
+    component: () =>
+      import(/* webpackChunkName: "Registrate" */ "../views/Registrate.vue"),
+  },
+  {
     path: "/admin",
     name: "Admin",
     component: () =>
