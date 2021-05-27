@@ -23,6 +23,7 @@ const routes = [
       import(
         /* webpackChunkName: "PagoServicios" */ "../views/PagoServicios.vue"
       ),
+    meta: { pather: "pagos" },
   },
   {
     path: "/pagos/historial",
@@ -31,6 +32,7 @@ const routes = [
       import(
         /* webpackChunkName: "HistorialPagos" */ "../views/HistorialPagos.vue"
       ),
+    meta: { pather: "pagos" },
   },
   {
     path: "/contacto",
@@ -45,6 +47,7 @@ const routes = [
       import(
         /* webpackChunkName: "GenerarReporte" */ "../views/GenerarReporte.vue"
       ),
+    meta: { pather: "reportes" },
   },
   {
     path: "/reportes/estatus-reporte",
@@ -53,6 +56,7 @@ const routes = [
       import(
         /* webpackChunkName: "EstatusReporte" */ "../views/EstatusReporte.vue"
       ),
+    meta: { pather: "reportes" },
   },
   {
     path: "/cuidado-del-agua",
@@ -72,7 +76,9 @@ const routes = [
     path: "/login/recuperar-contrasena",
     name: "RecuperarPassword",
     component: () =>
-      import(/* webpackChunkName: "RecuperarPassword" */ "../views/RecuperarPassword.vue"),
+      import(
+        /* webpackChunkName: "RecuperarPassword" */ "../views/RecuperarPassword.vue"
+      ),
   },
   {
     path: "/admin",

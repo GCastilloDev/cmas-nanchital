@@ -18,16 +18,21 @@
 
       <div class="d-none d-md-flex">
         <v-btn
-          class="black--text text-capitalize"
+          active-class="activeClass"
+          class="black--text text-capitalize rounded-pill mx-1 btn__hover"
           color="white"
           depressed
           :to="{ name: 'Nosotros' }"
           >Nosotros</v-btn
         >
+
         <v-menu offset-y open-on-hover>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              class="black--text text-capitalize"
+              class="text-capitalize rounded-pill mx-1 btn__hover"
+              :class="
+                $route.meta.pather === 'pagos' ? 'activeClass' : 'black--text'
+              "
               color="white"
               depressed
               v-bind="attrs"
@@ -38,6 +43,7 @@
           </template>
           <v-list>
             <v-list-item
+              active-class="activeClass"
               v-for="(item, index) in pagos"
               :key="index"
               link
@@ -48,16 +54,23 @@
           </v-list>
         </v-menu>
         <v-btn
-          class="black--text text-capitalize"
+          active-class="activeClass"
+          class="black--text text-capitalize rounded-pill mx-1 btn__hover"
           color="white"
           depressed
           :to="{ name: 'Contacto' }"
           >Contacto</v-btn
         >
+
         <v-menu offset-y open-on-hover>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              class="black--text text-capitalize"
+              class="text-capitalize rounded-pill mx-1 btn__hover"
+              :class="
+                $route.meta.pather === 'reportes'
+                  ? 'activeClass'
+                  : 'black--text'
+              "
               color="white"
               depressed
               v-bind="attrs"
@@ -68,6 +81,7 @@
           </template>
           <v-list>
             <v-list-item
+              active-class="activeClass"
               v-for="(item, index) in reportes"
               :key="index"
               link
@@ -78,14 +92,16 @@
           </v-list>
         </v-menu>
         <v-btn
-          class="black--text text-capitalize"
+          active-class="activeClass"
+          class="black--text text-capitalize rounded-pill mx-1 btn__hover"
           color="white"
           depressed
           :to="{ name: 'CuidadoDelAgua' }"
           >Cuidado del agua</v-btn
         >
         <v-btn
-          class="rounded-pill text-capitalize"
+          active-class="activeClass"
+          class="rounded-pill text-capitalize rounded-pill mx-1 btn__hover"
           color="#01AB55"
           dark
           depressed
@@ -93,7 +109,8 @@
           >Login</v-btn
         >
         <v-btn
-          class="black--text text-capitalize"
+          active-class="activeClass"
+          class="black--text text-capitalize rounded-pill mx-1 btn__hover"
           color="white"
           depressed
           :to="{ name: 'Admin' }"
@@ -147,4 +164,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.activeClass {
+  background-color: rgba(46, 186, 115, 0.01) !important;
+  color: rgb(46, 186, 115) !important;
+}
+
+.btn__hover:hover {
+  background-color: rgba(46, 186, 115, 0.7) !important;
+  color: #ffff !important;
+}
 </style>
