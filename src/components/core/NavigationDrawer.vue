@@ -1,6 +1,11 @@
 <template>
-  <v-navigation-drawer v-model="localDrawer" absolute temporary right >
-    <v-list dense>
+  <v-navigation-drawer
+    class="overflow-hidden"
+    v-model="localDrawer"
+    absolute
+    temporary
+  >
+    <v-list nav dense>
       <v-list-item link :to="{ name: 'Nosotros' }" active-class="activeClass">
         <v-list-item-content>
           <v-list-item-title>Nosotros</v-list-item-title>
