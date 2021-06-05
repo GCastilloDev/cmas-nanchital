@@ -9,6 +9,7 @@
           </h1>
           <div class="mt-5">
             <v-text-field
+              v-model="correo"
               color="#2EBA73"
               class="rounded-pill"
               placeholder="Correo"
@@ -18,6 +19,7 @@
           </div>
           <div>
             <v-text-field
+              v-model="password"
               color="#2EBA73"
               class="rounded-pill"
               placeholder="Contraseña"
@@ -29,6 +31,7 @@
           <v-row>
             <v-col cols="12" sm="6">
               <v-btn
+                :loading="loading"
                 @click="iniciarSesion"
                 block
                 class="rounded-pill text-none font-weight-regular"
@@ -64,17 +67,67 @@
 //EventBus
 import EventBus from "../helpers/EventBus";
 
+//DB
+import { db } from "../helpers/Firebase";
+
+import { mapActions } from "vuex";
+
 export default {
   name: "Login",
-  data: () => ({}),
+  data: () => ({
+    correo: "",
+    password: "",
+    loading: false,
+    rol: {
+      admin: "Admin",
+      user: "User",
+    },
+  }),
   methods: {
-    iniciarSesion() {
+    ...mapActions(["sessionInit"]),
+    async iniciarSesion() {
+      this.loading = true;
       const data = {};
+      const user = await this.obtenerUsuario(this.correo, this.password);
+
+      if (user.empty) {
+        data.message = "Credenciales invalidas, intente de nuevo!";
+        data.type = "error";
+        EventBus.$emit("toast", data);
+        this.loading = false;
+        return;
+      }
+
+      const userData = user.docs[0].data();
+      delete userData.password;
+
+      const ruta = userData.rol;
+
+      this.guardarSesion(userData);
+
       data.message = "Inicio de sesión exitosa!";
       data.type = "success";
 
       EventBus.$emit("toast", data);
-      this.$router.push({ name: "Home" });
+      this.$router.push({ name: this.rol[ruta] });
+    },
+    async obtenerUsuario(correo, password) {
+      try {
+        const user = await db
+          .collection("usuarios")
+          .where("correo", "==", correo)
+          .where("password", "==", password)
+          .limit(1)
+          .get();
+
+        return user;
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+    guardarSesion(user) {
+      sessionStorage.setItem("user", JSON.stringify(user));
+      this.sessionInit(user);
     },
   },
 };

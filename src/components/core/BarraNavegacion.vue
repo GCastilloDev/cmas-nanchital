@@ -100,6 +100,7 @@
           >Cuidado del agua</v-btn
         >
         <v-btn
+          v-if="!session"
           active-class="activeClass"
           class="rounded-pill text-capitalize rounded-pill mx-1 btn__hover"
           color="#01AB55"
@@ -109,12 +110,32 @@
           >Login</v-btn
         >
         <v-btn
+          v-if="session && rol === 'admin'"
           active-class="activeClass"
           class="black--text text-capitalize rounded-pill mx-1 btn__hover"
           color="white"
           depressed
           :to="{ name: 'Admin' }"
           >Admin</v-btn
+        >
+        <v-btn
+          v-if="session && rol === 'user'"
+          active-class="activeClass"
+          class="black--text text-capitalize rounded-pill mx-1 btn__hover"
+          color="white"
+          depressed
+          :to="{ name: 'User' }"
+          >User</v-btn
+        >
+        <v-btn
+          v-if="session"
+          class="rounded-pill text-capitalize rounded-pill mx-1 btn__hover"
+          color="#01AB55"
+          dark
+          depressed
+          :to="{ name: 'Home' }"
+          @click="cerrarSession"
+          >Cerrar sesión</v-btn
         >
       </div>
       <v-app-bar-nav-icon
@@ -125,12 +146,14 @@
     </v-app-bar>
     <navigation-drawer
       :drawer="drawer"
-      @close="drawer = !drawer"
+      @close="drawer = $event"
     ></navigation-drawer>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
   name: "BarraNavegacion",
   components: {
@@ -159,6 +182,12 @@ export default {
       },
     ],
   }),
+  methods: {
+    ...mapActions(["cerrarSession"]),
+  },
+  computed: {
+    ...mapState(["session", "rol"]),
+  },
 };
 </script>
 
@@ -171,5 +200,9 @@ export default {
 .btn__hover:hover {
   background-color: rgba(46, 186, 115, 0.7) !important;
   color: #ffff !important;
+}
+
+.cerrarSession {
+  background-color: #ffff !important;
 }
 </style>

@@ -4,6 +4,23 @@ import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
+const isAuthenticated = (to, from, next) => {
+  if (sessionStorage.getItem("user") === null) {
+    next({ name: "Login" });
+    return;
+  }
+
+  const { rol } = JSON.parse(sessionStorage.getItem("user"));
+  const rolGuard = to.meta.rol;
+
+  if (rol === rolGuard) {
+    next();
+    return;
+  }
+
+  next({ name: "Error401" });
+};
+
 const routes = [
   {
     path: "/",
@@ -91,6 +108,31 @@ const routes = [
     name: "Admin",
     component: () =>
       import(/* webpackChunkName: "Admin" */ "../views/Admin.vue"),
+    meta: {
+      rol: "admin",
+    },
+    beforeEnter: isAuthenticated,
+  },
+  {
+    path: "/user",
+    name: "User",
+    component: () => import(/* webpackChunkName: "User" */ "../views/User.vue"),
+    meta: {
+      rol: "user",
+    },
+    beforeEnter: isAuthenticated,
+  },
+  {
+    path: "/401",
+    name: "Error401",
+    component: () =>
+      import(/* webpackChunkName: "Error401" */ "../views/401.vue"),
+  },
+  {
+    path: "*",
+    name: "Error404",
+    component: () =>
+      import(/* webpackChunkName: "Error404" */ "../views/404.vue"),
   },
 ];
 

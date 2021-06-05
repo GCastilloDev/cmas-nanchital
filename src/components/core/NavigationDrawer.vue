@@ -68,7 +68,12 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list-item link :to="{ name: 'Login' }" active-class="activeClass">
+      <v-list-item
+        v-if="!session"
+        link
+        :to="{ name: 'Login' }"
+        active-class="activeClass"
+      >
         <v-list-item-content>
           <v-list-item-title
             ><span class="primary--text">Login</span></v-list-item-title
@@ -76,9 +81,39 @@
         </v-list-item-content>
       </v-list-item>
 
-      <v-list-item link :to="{ name: 'Admin' }" active-class="activeClass">
+      <v-list-item
+        v-if="session"
+        @click="closeSession"
+        link
+        :to="{ name: 'Home' }"
+        color="white"
+      >
+        <v-list-item-content>
+          <v-list-item-title
+            ><span class="primary--text">Cerrar sesión</span></v-list-item-title
+          >
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item
+        v-if="session && rol === 'admin'"
+        link
+        :to="{ name: 'Admin' }"
+        active-class="activeClass"
+      >
         <v-list-item-content>
           <v-list-item-title>Admin</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-list-item
+        v-if="session && rol === 'user'"
+        link
+        :to="{ name: 'User' }"
+        active-class="activeClass"
+      >
+        <v-list-item-content>
+          <v-list-item-title>User</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list>
@@ -86,6 +121,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+
 export default {
   name: "NavigationDrawer",
   props: {
@@ -119,12 +156,22 @@ export default {
       },
     ],
   }),
+  methods: {
+    ...mapActions(["cerrarSession"]),
+    closeSession() {
+      this.$emit("close", false);
+      this.cerrarSession();
+    },
+  },
+  computed: {
+    ...mapState(["session", "rol"]),
+  },
   watch: {
     drawer: function () {
       if (this.drawer) this.localDrawer = true;
     },
     localDrawer: function () {
-      if (!this.localDrawer) this.$emit("close");
+      if (!this.localDrawer) this.$emit("close", false);
     },
   },
 };

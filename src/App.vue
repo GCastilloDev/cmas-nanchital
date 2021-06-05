@@ -21,6 +21,8 @@
 // EventBus
 import EventBus from "./helpers/EventBus";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "App",
   mounted() {
@@ -36,7 +38,9 @@ export default {
     typeSnackBar: "success",
   }),
   methods: {
+    ...mapActions(["sessionInit"]),
     init() {
+      this.detectarSession();
       EventBus.$on("toast", (data) => {
         this.showToast(data);
       });
@@ -45,6 +49,12 @@ export default {
       this.messageSnackBar = data.message;
       this.typeSnackBar = data.type;
       this.snackbar = true;
+    },
+    detectarSession() {
+      if (sessionStorage.getItem("user") === null) return true;
+
+      const user = JSON.parse(sessionStorage.getItem("user"));
+      this.sessionInit(user);
     },
   },
 };

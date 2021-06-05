@@ -18,7 +18,7 @@
         </div>
 
         <div v-if="show">
-          <h1 class="white--text text-h5 font-weight-bold mb-3">
+          <h1 class="white--text text-h6 text-sm-h5 font-weight-bold mb-3">
             {{ ciudad }}
           </h1>
           <div class="mb-3">
@@ -39,6 +39,25 @@
         </div>
       </div>
       <!-- <v-img  src="@/assets/header.jpg"></v-img> -->
+    </div>
+
+    <div class="container__bg">
+      <v-container>
+        <h2>Agua potable y drenaje sanitario</h2>
+        <v-row>
+          <v-col>
+            <p>
+              Desarrollar las actividades necesarias en el proceso de
+              contratación para prestar los servicios públicos de agua potable
+              y/o drenaje sanitario entre el Cliente y Servicios de Agua y
+              Drenaje de Nanchital a través de cualquiera de sus Oficinas
+              Comerciales; de una manera eficiente, con sentido de
+              responsabilidad social y cumpliendo con estándares internacionales
+              de calidad.
+            </p>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
   </div>
 </template>
@@ -100,5 +119,9 @@ export default {
 
 .loading__content {
   height: 97%;
+}
+
+.container__bg {
+  background-color: #f4f6f5;
 }
 </style>
