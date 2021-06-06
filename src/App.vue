@@ -41,9 +41,7 @@ export default {
     ...mapActions(["sessionInit"]),
     init() {
       this.detectarSession();
-      EventBus.$on("toast", (data) => {
-        this.showToast(data);
-      });
+      EventBus.$on("toast", (data) => this.showToast(data));
     },
     showToast(data) {
       this.messageSnackBar = data.message;

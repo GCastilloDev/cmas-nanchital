@@ -9,7 +9,7 @@
         </v-avatar>
         <h1>Usuarios</h1>
       </div>
-      <v-btn color="primary" depressed>
+      <v-btn @click="add" color="primary" depressed>
         <v-icon left>mdi-account-plus</v-icon>
         Agregar usuario</v-btn
       >
@@ -17,7 +17,7 @@
     <v-data-table
       :headers="headers"
       :items="items"
-      :items-per-page="5"
+      :items-per-page="10"
       :loading="loading"
       class="elevation-1"
     >
@@ -44,19 +44,39 @@
         >
       </template>
     </v-data-table>
+
+    <component
+      :is="component"
+      :dialog="dialog"
+      :data="deleteData"
+      :isEdit="isEdit"
+      :usuario="userSelected"
+      @close="close"
+      @updateData="updateData"
+      @delete="deleteUser"
+      @editUser="editUser"
+    />
   </v-container>
 </template>
 
 <script>
 import { db } from "../helpers/Firebase";
+import Bus from "../helpers/EventBus";
 
 export default {
   name: "Usuarios",
   mounted() {
     this.getData();
   },
+  components: {
+    AddAndEdit: () => import("../components/usuario/UsuarioAgregarEditar"),
+    Delete: () => import("../components/core/Delete.vue"),
+  },
   data: () => ({
     loading: true,
+    component: "",
+    dialog: false,
+    deleteData: {},
     items: [],
     headers: [
       {
@@ -80,6 +100,8 @@ export default {
         value: "actions",
       },
     ],
+    userSelected: {},
+    isEdit: false,
   }),
   methods: {
     async getData() {
@@ -101,11 +123,75 @@ export default {
       });
       return items;
     },
-    edit({ id }) {
-      console.log("EDITAR", id);
+    close() {
+      this.isEdit = false;
+      this.dialog = false;
     },
-    deleted({ id }) {
-      console.log("ELIMINAR", id);
+    edit(item) {
+      this.isEdit = true;
+      this.userSelected = Object.assign({}, item);
+      this.userSelected.correoOriginal = this.userSelected.correo;
+      this.component = "AddAndEdit";
+      this.dialog = true;
+    },
+    deleted(item) {
+      this.userSelected = item;
+      this.deleteData = {
+        icon: "mdi-account-remove",
+        title: "Eliminar usuario",
+        body: `<h2>¿Desea eliminar al usuario ${item.nombre}?</h2> <br /> Los cambios no se podrán revertir.`,
+      };
+      this.component = "Delete";
+      this.dialog = true;
+    },
+    add() {
+      this.userSelected = {
+        nombre: "",
+        apellidos: "",
+        correo: "",
+        password: "",
+        rol: "",
+      };
+      this.isEdit = false;
+      this.component = "AddAndEdit";
+      this.dialog = true;
+    },
+    async updateData() {
+      await this.getData();
+      this.dialog = false;
+      Bus.$emit("toast", {
+        type: "success",
+        message: "Usuario actualizado con éxito!",
+      });
+    },
+    async deleteUser() {
+      try {
+        await db.collection("usuarios").doc(this.userSelected.id).delete();
+        Bus.$emit("toast", {
+          type: "success",
+          message: "Usuario eliminado con éxito!",
+        });
+        await this.getData();
+        this.dialog = false;
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+    async editUser() {
+      this.userSelected = {
+        nombre: "",
+        apellidos: "",
+        correo: "",
+        password: "",
+        rol: "",
+      };
+      await this.getData();
+      this.isEdit = false;
+      Bus.$emit("toast", {
+        type: "success",
+        message: "Usuario actualizado con éxito!",
+      });
+      this.dialog = false;
     },
   },
 };
