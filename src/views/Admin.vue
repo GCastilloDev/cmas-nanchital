@@ -52,8 +52,9 @@ export default {
       },
       {
         title: "Servicios",
-        to: "Usuarios",
+        to: "Servicios",
         color: "#a3c644",
+        description: "Módulo para la visualización y gestión de los servicios.",
         src: "https://firebasestorage.googleapis.com/v0/b/cmas-nanchital.appspot.com/o/servicios.png?alt=media&token=2264c36f-b490-4b69-9a76-6ee1b06c3c05",
       },
       {
