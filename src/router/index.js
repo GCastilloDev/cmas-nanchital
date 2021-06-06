@@ -144,6 +144,16 @@ const routes = [
     beforeEnter: isAuthenticated,
   },
   {
+    path: "/admin/roles",
+    name: "Roles",
+    component: () =>
+      import(/* webpackChunkName: "Roles" */ "../views/Roles.vue"),
+    meta: {
+      rol: "admin",
+    },
+    beforeEnter: isAuthenticated,
+  },
+  {
     path: "/usuario",
     name: "User",
     component: () => import(/* webpackChunkName: "User" */ "../views/User.vue"),

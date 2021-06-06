@@ -46,8 +46,9 @@ export default {
       },
       {
         title: "Roles",
-        to: "Usuarios",
+        to: "Roles",
         color: "#b22746",
+        description: "Módulo para la visualización y gestión de los roles.",
         src: "https://firebasestorage.googleapis.com/v0/b/cmas-nanchital.appspot.com/o/roles.png?alt=media&token=edbf2984-5e75-4e4b-aa1a-b44d8e65f55f",
       },
       {
@@ -61,7 +62,8 @@ export default {
         title: "Categorías",
         to: "Categorias",
         color: "#8e244d",
-        description: "Módulo para la visualización y gestión de las categorías.",
+        description:
+          "Módulo para la visualización y gestión de las categorías.",
         src: "https://firebasestorage.googleapis.com/v0/b/cmas-nanchital.appspot.com/o/categorias.png?alt=media&token=69531055-62bd-4223-b36d-9c73851f1573",
       },
     ],
