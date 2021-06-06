@@ -16,7 +16,7 @@
 
       <v-spacer></v-spacer>
 
-      <div class="d-none d-md-flex">
+      <div class="d-none d-lg-flex">
         <v-btn
           active-class="activeClass"
           class="black--text text-capitalize rounded-pill mx-1 btn__hover"
@@ -139,7 +139,7 @@
         >
       </div>
       <v-app-bar-nav-icon
-        class="d-md-none"
+        class="d-lg-none"
         @click="drawer = !drawer"
         color="black"
       ></v-app-bar-nav-icon>
