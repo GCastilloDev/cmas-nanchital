@@ -2,8 +2,8 @@
   <v-dialog v-model="dialog" persistent max-width="600">
     <v-card>
       <v-card-title class="text-h5 mb-5">
-        <v-icon left color="black">mdi-account-plus</v-icon>
-        Agregar usuario
+        <v-icon left color="black">{{ isEdit ? "mdi-account-edit" : "mdi-account-plus" }}</v-icon>
+        {{ isEdit ? "Editar" : "Crear" }} usuario
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -71,7 +71,7 @@
           @click="saveUser"
         >
           <v-icon left>mdi-account-check</v-icon>
-          Guardar usuario
+          {{ isEdit ? "Editar" : "Crear" }} usuario
         </v-btn>
       </v-card-actions>
     </v-card>
