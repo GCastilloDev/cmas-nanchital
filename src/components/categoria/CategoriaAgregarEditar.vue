@@ -2,8 +2,10 @@
   <v-dialog v-model="dialog" persistent max-width="600">
     <v-card>
       <v-card-title class="text-h5 mb-5">
-        <v-icon color="black" left>mdi-folder-plus</v-icon>
-        Agregar categoría
+        <v-icon color="black" left>{{
+          isEdit ? "mdi-folder-edit" : "mdi-folder-plus"
+        }}</v-icon>
+        {{ isEdit ? "Editar" : "Crear" }} categoría
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -37,7 +39,7 @@
           color="primary"
           depressed
           ><v-icon left>mdi-folder</v-icon>
-          Guardar categoría
+          {{ isEdit ? "Editar" : "Crear" }} categoría
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -89,13 +91,22 @@ export default {
     },
     async saveItem() {
       try {
+        this.loading = true;
         await db.collection("categorias").doc().set({ nombre: this.categoria });
         this.$emit("newItem");
       } catch (error) {
         console.warn(error);
       }
     },
-    editItem() {},
+    async editItem() {
+      try {
+        this.loading = true;
+        await db.collection('categorias').doc(this.item.id).update({nombre: this.categoria});
+        this.$emit("updatedItem");
+      } catch (error) {
+        console.warn(error);
+      }
+    },
   },
   watch: {
     dialog: function () {

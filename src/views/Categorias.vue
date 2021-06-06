@@ -55,6 +55,7 @@
       @close="close"
       @delete="deleteItem"
       @newItem="newItem"
+      @updatedItem="updatedItem"
     />
   </v-container>
 </template>
@@ -125,7 +126,12 @@ export default {
       this.isEdit = false;
       this.dialog = false;
     },
-    edit() {},
+    edit(item) {
+      this.itemSelected = item;
+      this.isEdit = true;
+      this.component = "AgregarEditar";
+      this.dialog = true;
+    },
     deleted(item) {
       this.itemSelected = item;
       this.component = "Delete";
@@ -155,6 +161,14 @@ export default {
       Bus.$emit("toast", {
         type: "success",
         message: "Categoría creada con éxito!",
+      });
+    },
+    async updatedItem() {
+      await this.getData();
+      this.close();
+      Bus.$emit("toast", {
+        type: "success",
+        message: "Categoría actualizada con éxito!",
       });
     },
   },
