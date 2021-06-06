@@ -51,8 +51,10 @@
       :dialog="dialog"
       :data="deleteData"
       :isEdit="isEdit"
+      :item="itemSelected"
       @close="close"
       @delete="deleteItem"
+      @newItem="newItem"
     />
   </v-container>
 </template>
@@ -68,6 +70,8 @@ export default {
   },
   components: {
     Delete: () => import("../components/core/Delete.vue"),
+    AgregarEditar: () =>
+      import("../components/categoria/CategoriaAgregarEditar.vue"),
   },
   data: () => ({
     dialog: false,
@@ -112,7 +116,11 @@ export default {
         console.warn(error);
       }
     },
-    add() {},
+    add() {
+      this.isEdit = false;
+      this.component = "AgregarEditar";
+      this.dialog = true;
+    },
     close() {
       this.isEdit = false;
       this.dialog = false;
@@ -140,6 +148,14 @@ export default {
       } catch (error) {
         console.warn(error);
       }
+    },
+    async newItem() {
+      await this.getData();
+      this.close();
+      Bus.$emit("toast", {
+        type: "success",
+        message: "Categoría creada con éxito!",
+      });
     },
   },
 };
