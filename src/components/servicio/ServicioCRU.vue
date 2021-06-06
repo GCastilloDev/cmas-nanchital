@@ -28,6 +28,14 @@
             outlined
             :rules="requiredRules"
           ></v-text-field>
+          <v-select
+            v-model="doc.categoria"
+            dense
+            :items="categorias"
+            label="Categoria"
+            outlined
+            :rules="requiredRules"
+          ></v-select>
           <v-textarea
             v-model="doc.descripcion"
             counter
@@ -71,7 +79,7 @@ import { db } from "../../helpers/Firebase";
 export default {
   name: "ServicioCRU",
   mounted() {
-    this.detectIsEdit();
+    this.init();
   },
   props: {
     dialog: {
@@ -98,8 +106,25 @@ export default {
     ],
     requiredRules: [(v) => !!v || "El campo es requerido"],
     doc: {},
+    categorias: [],
   }),
   methods: {
+    async init() {
+      this.detectIsEdit();
+      await this.getCategories();
+    },
+    async getCategories() {
+      try {
+        const { docs } = await db.collection("categorias").get();
+        const categorias = [];
+
+        docs.forEach((e) => categorias.push(e.data().nombre));
+
+        this.categorias = categorias;
+      } catch (error) {
+        console.warn(error);
+      }
+    },
     detectIsEdit() {
       this.$refs.form.reset();
       this.doc = this.item;

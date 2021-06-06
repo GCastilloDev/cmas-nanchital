@@ -86,8 +86,8 @@ export default {
         value: "nombre",
       },
       {
-        text: "Descripción",
-        value: "descripcion",
+        text: "Categoria",
+        value: "categoria",
       },
       {
         text: "Precio",
@@ -110,6 +110,7 @@ export default {
         nombre: "",
         precio: 0,
         descripcion: "",
+        categoria: "",
       };
       this.isEdit = false;
       this.component = "ServicioCRU";
