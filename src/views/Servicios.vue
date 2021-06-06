@@ -53,6 +53,7 @@
       :item="itemSelected"
       @close="close"
       @createdItem="createdItem"
+      @updatedItem="updatedItem"
     />
   </v-container>
 </template>
@@ -110,7 +111,12 @@ export default {
       this.component = "ServicioCRU";
       this.dialog = true;
     },
-    edit() {},
+    edit(item) {
+      this.itemSelected = Object.assign({}, item);
+      this.isEdit = true;
+      this.component = "ServicioCRU";
+      this.dialog = true;
+    },
     deleted() {},
     close() {
       this.isEdit = false;
@@ -141,6 +147,14 @@ export default {
       Bus.$emit("toast", {
         type: "success",
         message: "Servicio creado con éxito!",
+      });
+    },
+    async updatedItem() {
+      await this.getData();
+      this.close();
+      Bus.$emit("toast", {
+        type: "success",
+        message: "Servicio actualizado con éxito!",
       });
     },
   },

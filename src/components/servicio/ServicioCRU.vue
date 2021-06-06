@@ -58,7 +58,7 @@
           depressed
         >
           <v-icon left> mdi-file-check</v-icon>
-          Crear servicio
+          {{ isEdit ? "Editar" : "Crear" }} servicio
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -121,7 +121,13 @@ export default {
       }
     },
     async editItem() {
-      alert("EDITAR");
+      try {
+        this.loading = true;
+        await db.collection("servicios").doc(this.item.id).update(this.doc);
+        this.$emit("updatedItem");
+      } catch (error) {
+        console.warn(error);
+      }
     },
   },
   watch: {
