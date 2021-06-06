@@ -51,9 +51,11 @@
       :dialog="dialog"
       :isEdit="isEdit"
       :item="itemSelected"
+      :data="dataDelete"
       @close="close"
       @createdItem="createdItem"
       @updatedItem="updatedItem"
+      @delete="deleteItem"
     />
   </v-container>
 </template>
@@ -69,12 +71,14 @@ export default {
   },
   components: {
     ServicioCRU: () => import("../components/servicio/ServicioCRU.vue"),
+    Delete: () => import("../components/core/Delete.vue"),
   },
   data: () => ({
     dialog: false,
     isEdit: false,
     loading: false,
     component: "",
+    dataDelete: {},
     items: [],
     headers: [
       {
@@ -117,7 +121,16 @@ export default {
       this.component = "ServicioCRU";
       this.dialog = true;
     },
-    deleted() {},
+    deleted(item) {
+      this.itemSelected = Object.assign({}, item);
+      this.dataDelete = {
+        icon: "mdi-file-remove",
+        title: "Eliminar servicio",
+        body: `<h3>¿Desea eliminar el servicio ${item.nombre}?</h3><h4>Los cambios no podrán revertirse.</h4>`,
+      };
+      this.component = "Delete";
+      this.dialog = true;
+    },
     close() {
       this.isEdit = false;
       this.dialog = false;
@@ -156,6 +169,19 @@ export default {
         type: "success",
         message: "Servicio actualizado con éxito!",
       });
+    },
+    async deleteItem() {
+      try {
+        await db.collection("servicios").doc(this.itemSelected.id).delete();
+        await this.getData();
+        this.close();
+        Bus.$emit("toast", {
+          type: "success",
+          message: "Servicio eliminado con éxito!",
+        });
+      } catch (error) {
+        console.warn(error);
+      }
     },
   },
 };
