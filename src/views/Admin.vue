@@ -6,7 +6,13 @@
 
     <v-row>
       <v-col cols="12" sm="6" md="4" v-for="item in menu" :key="item.nombre">
-        <v-card :color="item.color" dark link :to="{ name: item.to }" height="100%">
+        <v-card
+          :color="item.color"
+          dark
+          link
+          :to="{ name: item.to }"
+          height="100%"
+        >
           <div class="d-flex flex-no-wrap justify-space-between">
             <div>
               <v-card-title class="text-h5" v-text="item.title"></v-card-title>
@@ -51,9 +57,10 @@ export default {
         src: "https://firebasestorage.googleapis.com/v0/b/cmas-nanchital.appspot.com/o/servicios.png?alt=media&token=2264c36f-b490-4b69-9a76-6ee1b06c3c05",
       },
       {
-        title: "Categorias",
-        to: "Usuarios",
+        title: "Categorías",
+        to: "Categorias",
         color: "#8e244d",
+        description: "Módulo para la visualización y gestión de las categorías.",
         src: "https://firebasestorage.googleapis.com/v0/b/cmas-nanchital.appspot.com/o/categorias.png?alt=media&token=69531055-62bd-4223-b36d-9c73851f1573",
       },
     ],
