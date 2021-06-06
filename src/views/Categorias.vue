@@ -45,18 +45,36 @@
         >
       </template>
     </v-data-table>
+
+    <component
+      :is="component"
+      :dialog="dialog"
+      :data="deleteData"
+      :isEdit="isEdit"
+      @close="close"
+      @delete="deleteItem"
+    />
   </v-container>
 </template>
 
 <script>
 import { db } from "../helpers/Firebase";
+import Bus from "../helpers/EventBus";
 
 export default {
   name: "Categorias",
   mounted() {
     this.getData();
   },
+  components: {
+    Delete: () => import("../components/core/Delete.vue"),
+  },
   data: () => ({
+    dialog: false,
+    isEdit: false,
+    deleteData: {},
+    component: "",
+    itemSelected: {},
     items: [],
     loading: false,
     headers: [
@@ -95,8 +113,34 @@ export default {
       }
     },
     add() {},
+    close() {
+      this.isEdit = false;
+      this.dialog = false;
+    },
     edit() {},
-    deleted() {},
+    deleted(item) {
+      this.itemSelected = item;
+      this.component = "Delete";
+      this.deleteData = {
+        icon: "mdi-folder-remove",
+        title: "Eliminar categoría",
+        body: `<h3>¿Desea eliminar la categoría ${item.nombre}?</h3><h4>Este cambio no podrá ser revertido.</h4>`,
+      };
+      this.dialog = true;
+    },
+    async deleteItem() {
+      try {
+        await db.collection("categorias").doc(this.itemSelected.id).delete();
+        await this.getData();
+        Bus.$emit("toast", {
+          type: "success",
+          message: "Categoría eliminada con éxito!",
+        });
+        this.close();
+      } catch (error) {
+        console.warn(error);
+      }
+    },
   },
 };
 </script>
