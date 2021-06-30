@@ -2,8 +2,10 @@
   <v-dialog v-model="dialog" persistent max-width="600">
     <v-card>
       <v-card-title class="text-h5 mb-5">
-        <v-icon left color="black">{{ isEdit ? "mdi-account-edit" : "mdi-account-plus" }}</v-icon>
-        {{ isEdit ? "Editar" : "Crear" }} usuario
+        <v-icon left color="black">{{
+          isEdit ? 'mdi-account-edit' : 'mdi-account-plus'
+        }}</v-icon>
+        {{ isEdit ? 'Editar' : 'Crear' }} usuario
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -71,7 +73,7 @@
           @click="saveUser"
         >
           <v-icon left>mdi-account-check</v-icon>
-          {{ isEdit ? "Editar" : "Crear" }} usuario
+          {{ isEdit ? 'Editar' : 'Crear' }} usuario
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -79,11 +81,11 @@
 </template>
 
 <script>
-import { db } from "../../helpers/Firebase";
-import Bus from "../../helpers/EventBus";
+import { db } from '../../helpers/Firebase';
+import Bus from '../../helpers/EventBus';
 
 export default {
-  name: "UsuarioAgregarEditar",
+  name: 'UsuarioAgregarEditar',
   mounted() {
     this.init();
   },
@@ -105,7 +107,7 @@ export default {
     valid: true,
     roles: [],
     loading: false,
-    correoOriginal: "",
+    correoOriginal: '',
     // usuario: {
     //   nombre: "",
     //   apellidos: "",
@@ -114,10 +116,10 @@ export default {
     //   rol: "",
     // },
     emailRules: [
-      (v) => !!v || "El campo es requerido",
-      (v) => /.+@.+\..+/.test(v) || "Correo no válido",
+      (v) => !!v || 'El campo es requerido',
+      (v) => /.+@.+\..+/.test(v) || 'Correo no válido',
     ],
-    requiredRules: [(v) => !!v || "El campo es requerido"],
+    requiredRules: [(v) => !!v || 'El campo es requerido'],
   }),
   methods: {
     init() {
@@ -125,7 +127,7 @@ export default {
     },
     async getRoles() {
       try {
-        const { docs } = await db.collection("roles").get();
+        const { docs } = await db.collection('roles').get();
         const roles = [];
 
         docs.forEach((e) => roles.push(e.data().nombre));
@@ -151,15 +153,18 @@ export default {
           return;
         }
 
-        await db.collection("usuarios").doc().set(this.usuario);
-        this.$emit("updateData");
+        await db
+          .collection('usuarios')
+          .doc()
+          .set(this.usuario);
+        this.$emit('updateData');
       } catch (error) {
         console.warn(error);
       }
     },
     error() {
       const data = {
-        type: "Error",
+        type: 'Error',
         message: `El correo ${this.usuario.correo} ya se encuentra registrado`,
       };
       this.loading = false;
@@ -177,8 +182,11 @@ export default {
         delete this.usuario.id;
         delete this.usuario.correoOriginal;
 
-        await db.collection("usuarios").doc(doc).update(this.usuario);
-        this.$emit("editUser");
+        await db
+          .collection('usuarios')
+          .doc(doc)
+          .update(this.usuario);
+        this.$emit('editUser');
       } catch (error) {
         console.warn(error);
       }
@@ -186,8 +194,8 @@ export default {
     async emailExist() {
       try {
         const { empty } = await db
-          .collection("usuarios")
-          .where("correo", "==", this.usuario.correo)
+          .collection('usuarios')
+          .where('correo', '==', this.usuario.correo)
           .get();
 
         const emailExist = !empty;
@@ -199,10 +207,10 @@ export default {
     },
   },
   watch: {
-    dialog: function () {
+    dialog: function() {
       this.loading = false;
       if (this.dialog && !this.isEdit) {
-        console.warn("ASDAADS");
+        console.warn('ASDAADS');
         this.$refs.form.resetValidation();
         this.$refs.form.reset();
       }
@@ -211,5 +219,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

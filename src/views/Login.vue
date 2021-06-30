@@ -65,35 +65,35 @@
 
 <script>
 //EventBus
-import EventBus from "../helpers/EventBus";
+import EventBus from '../helpers/EventBus';
 
 //DB
-import { db } from "../helpers/Firebase";
+import { db } from '../helpers/Firebase';
 
-import { mapActions } from "vuex";
+import { mapActions } from 'vuex';
 
 export default {
-  name: "Login",
+  name: 'Login',
   data: () => ({
-    correo: "",
-    password: "",
+    correo: '',
+    password: '',
     loading: false,
     rol: {
-      admin: "Admin",
-      user: "User",
+      admin: 'Admin',
+      user: 'User',
     },
   }),
   methods: {
-    ...mapActions(["sessionInit"]),
+    ...mapActions(['sessionInit']),
     async iniciarSesion() {
       this.loading = true;
       const data = {};
       const user = await this.obtenerUsuario(this.correo, this.password);
 
       if (user.empty) {
-        data.message = "Credenciales invalidas, intente de nuevo!";
-        data.type = "error";
-        EventBus.$emit("toast", data);
+        data.message = 'Credenciales invalidas, intente de nuevo!';
+        data.type = 'error';
+        EventBus.$emit('toast', data);
         this.loading = false;
         return;
       }
@@ -105,18 +105,19 @@ export default {
 
       this.guardarSesion(userData);
 
-      data.message = "Inicio de sesión exitosa!";
-      data.type = "success";
+      data.message = 'Inicio de sesión exitosa!';
+      data.type = 'success';
 
-      EventBus.$emit("toast", data);
+      EventBus.$emit('toast', data);
+      console.log(this.rol);
       this.$router.push({ name: this.rol[ruta] });
     },
     async obtenerUsuario(correo, password) {
       try {
         const user = await db
-          .collection("usuarios")
-          .where("correo", "==", correo)
-          .where("password", "==", password)
+          .collection('usuarios')
+          .where('correo', '==', correo)
+          .where('password', '==', password)
           .limit(1)
           .get();
 
@@ -126,7 +127,7 @@ export default {
       }
     },
     guardarSesion(user) {
-      sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem('user', JSON.stringify(user));
       this.sessionInit(user);
     },
   },
