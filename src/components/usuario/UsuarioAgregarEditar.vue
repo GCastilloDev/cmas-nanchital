@@ -43,6 +43,15 @@
             dense
           ></v-text-field>
           <v-text-field
+            v-model="usuario.telefono"
+            :rules="phoneRules"
+            label="Teléfono"
+            placeholder="Escriba el teléfono del usuario"
+            type="number"
+            outlined
+            dense
+          ></v-text-field>
+          <v-text-field
             v-model="usuario.password"
             :rules="requiredRules"
             type="password"
@@ -120,6 +129,10 @@ export default {
       (v) => /.+@.+\..+/.test(v) || 'Correo no válido',
     ],
     requiredRules: [(v) => !!v || 'El campo es requerido'],
+    phoneRules: [
+      (v) => !!v || 'El campo es requerido',
+      (v) => (v && v.length === 10) || 'El número debe de tener 10 dígitos',
+    ],
   }),
   methods: {
     init() {
@@ -139,7 +152,7 @@ export default {
     },
     async saveUser() {
       try {
-        // if (!this.$refs.form.validate()) return;
+        if (!this.$refs.form.validate()) return;
 
         this.loading = true;
 

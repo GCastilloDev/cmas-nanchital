@@ -97,23 +97,33 @@ export default {
       {
         text: 'Nombre',
         value: 'nombre',
+        filterable: false,
       },
       {
         text: 'Categoria',
         value: 'categoria',
+        filterable: true,
       },
       {
         text: 'Precio',
         value: 'precio',
+        filterable: false,
+      },
+      {
+        text: 'Cantidad',
+        value: 'cantidad',
+        filterable: false,
       },
       {
         text: 'Acciones',
         value: 'actions',
+        filterable: false,
       },
     ],
     itemSelected: {
       nombre: '',
       precio: 0,
+      cantidad: 0,
       descripcion: '',
     },
   }),
@@ -122,6 +132,7 @@ export default {
       this.itemSelected = {
         nombre: '',
         precio: 0,
+        cantidad: 0,
         descripcion: '',
         categoria: '',
       };

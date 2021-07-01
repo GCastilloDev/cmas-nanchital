@@ -108,6 +108,11 @@ export default {
         filterable: false,
       },
       {
+        text: 'Teléfono',
+        value: 'telefono',
+        filterable: false,
+      },
+      {
         text: 'Rol',
         value: 'rol',
         filterable: true,
@@ -179,6 +184,7 @@ export default {
         correo: '',
         password: '',
         rol: '',
+        telefono: '',
       };
       this.isEdit = false;
       this.component = 'AddAndEdit';
@@ -215,6 +221,7 @@ export default {
         correo: '',
         password: '',
         rol: '',
+        telefono: '',
       };
       await this.getData();
       this.isEdit = false;
