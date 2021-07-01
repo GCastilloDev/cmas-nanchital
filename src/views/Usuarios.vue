@@ -14,11 +14,22 @@
         Agregar usuario</v-btn
       >
     </div>
+
+    <v-autocomplete
+      v-model="search"
+      :items="roles"
+      item-text="nombre"
+      item-value="value"
+      outlined
+      dense
+      label="Filtrar por roles"
+    ></v-autocomplete>
     <v-data-table
       :headers="headers"
       :items="items"
       :items-per-page="10"
       :loading="loading"
+      :search="search"
       class="elevation-1"
     >
       <template v-slot:item.actions="{ item }">
@@ -60,44 +71,51 @@
 </template>
 
 <script>
-import { db } from "../helpers/Firebase";
-import Bus from "../helpers/EventBus";
+import { db } from '../helpers/Firebase';
+import Bus from '../helpers/EventBus';
 
 export default {
-  name: "Usuarios",
+  name: 'Usuarios',
   mounted() {
     this.getData();
   },
   components: {
-    AddAndEdit: () => import("../components/usuario/UsuarioAgregarEditar"),
-    Delete: () => import("../components/core/Delete.vue"),
+    AddAndEdit: () => import('../components/usuario/UsuarioAgregarEditar'),
+    Delete: () => import('../components/core/Delete.vue'),
   },
   data: () => ({
     loading: true,
-    component: "",
+    component: '',
     dialog: false,
+    search: '',
     deleteData: {},
     items: [],
+    roles: [],
     headers: [
       {
-        text: "Nombre",
-        value: "nombre",
+        text: 'Nombre',
+        value: 'nombre',
+        filterable: false,
       },
       {
-        text: "Apellidos",
-        value: "apellidos",
+        text: 'Apellidos',
+        value: 'apellidos',
+        filterable: false,
       },
       {
-        text: "Correo",
-        value: "correo",
+        text: 'Correo',
+        value: 'correo',
+        filterable: false,
       },
       {
-        text: "Rol",
-        value: "rol",
+        text: 'Rol',
+        value: 'rol',
+        filterable: true,
       },
       {
-        text: "Acciones",
-        value: "actions",
+        text: 'Acciones',
+        value: 'actions',
+        filterable: false,
       },
     ],
     userSelected: {},
@@ -106,7 +124,17 @@ export default {
   methods: {
     async getData() {
       try {
-        const { docs } = await db.collection("usuarios").get();
+        const { docs: roles } = await db.collection('roles').get();
+        const { docs } = await db.collection('usuarios').get();
+
+        this.roles = roles.map((rol) => {
+          return {
+            nombre: rol.data().nombre.toUpperCase(),
+            value: rol.data().nombre,
+          };
+        });
+        this.roles.unshift({ nombre: 'TODAS', value: '' });
+
         this.items = await this.getItems(docs);
       } catch (error) {
         console.warn(error);
@@ -131,45 +159,48 @@ export default {
       this.isEdit = true;
       this.userSelected = Object.assign({}, item);
       this.userSelected.correoOriginal = this.userSelected.correo;
-      this.component = "AddAndEdit";
+      this.component = 'AddAndEdit';
       this.dialog = true;
     },
     deleted(item) {
       this.userSelected = item;
       this.deleteData = {
-        icon: "mdi-account-remove",
-        title: "Eliminar usuario",
+        icon: 'mdi-account-remove',
+        title: 'Eliminar usuario',
         body: `<h2>¿Desea eliminar al usuario ${item.nombre}?</h2> <br /> Los cambios no se podrán revertir.`,
       };
-      this.component = "Delete";
+      this.component = 'Delete';
       this.dialog = true;
     },
     add() {
       this.userSelected = {
-        nombre: "",
-        apellidos: "",
-        correo: "",
-        password: "",
-        rol: "",
+        nombre: '',
+        apellidos: '',
+        correo: '',
+        password: '',
+        rol: '',
       };
       this.isEdit = false;
-      this.component = "AddAndEdit";
+      this.component = 'AddAndEdit';
       this.dialog = true;
     },
     async updateData() {
       await this.getData();
       this.dialog = false;
-      Bus.$emit("toast", {
-        type: "success",
-        message: "Usuario actualizado con éxito!",
+      Bus.$emit('toast', {
+        type: 'success',
+        message: 'Usuario actualizado con éxito!',
       });
     },
     async deleteUser() {
       try {
-        await db.collection("usuarios").doc(this.userSelected.id).delete();
-        Bus.$emit("toast", {
-          type: "success",
-          message: "Usuario eliminado con éxito!",
+        await db
+          .collection('usuarios')
+          .doc(this.userSelected.id)
+          .delete();
+        Bus.$emit('toast', {
+          type: 'success',
+          message: 'Usuario eliminado con éxito!',
         });
         await this.getData();
         this.dialog = false;
@@ -179,17 +210,17 @@ export default {
     },
     async editUser() {
       this.userSelected = {
-        nombre: "",
-        apellidos: "",
-        correo: "",
-        password: "",
-        rol: "",
+        nombre: '',
+        apellidos: '',
+        correo: '',
+        password: '',
+        rol: '',
       };
       await this.getData();
       this.isEdit = false;
-      Bus.$emit("toast", {
-        type: "success",
-        message: "Usuario actualizado con éxito!",
+      Bus.$emit('toast', {
+        type: 'success',
+        message: 'Usuario actualizado con éxito!',
       });
       this.dialog = false;
     },
@@ -197,5 +228,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -15,11 +15,22 @@
       >
     </div>
 
+    <v-autocomplete
+      v-model="search"
+      :items="categories"
+      item-text="nombre"
+      item-value="value"
+      outlined
+      dense
+      label="Filtrar por categoria"
+    ></v-autocomplete>
+
     <v-data-table
       :headers="headers"
       :items="items"
       :items-per-page="10"
       :loading="loading"
+      :search="search"
       class="elevation-1"
     >
       <template v-slot:item.actions="{ item }">
@@ -61,75 +72,77 @@
 </template>
 
 <script>
-import { db } from "../helpers/Firebase";
-import Bus from "../helpers/EventBus";
+import { db } from '../helpers/Firebase';
+import Bus from '../helpers/EventBus';
 
 export default {
-  name: "Servicios",
+  name: 'Servicios',
   mounted() {
     this.getData();
   },
   components: {
-    ServicioCRU: () => import("../components/servicio/ServicioCRU.vue"),
-    Delete: () => import("../components/core/Delete.vue"),
+    ServicioCRU: () => import('../components/servicio/ServicioCRU.vue'),
+    Delete: () => import('../components/core/Delete.vue'),
   },
   data: () => ({
     dialog: false,
     isEdit: false,
     loading: false,
-    component: "",
+    component: '',
+    search: '',
     dataDelete: {},
     items: [],
+    categories: [],
     headers: [
       {
-        text: "Nombre",
-        value: "nombre",
+        text: 'Nombre',
+        value: 'nombre',
       },
       {
-        text: "Categoria",
-        value: "categoria",
+        text: 'Categoria',
+        value: 'categoria',
       },
       {
-        text: "Precio",
-        value: "precio",
+        text: 'Precio',
+        value: 'precio',
       },
       {
-        text: "Acciones",
-        value: "actions",
+        text: 'Acciones',
+        value: 'actions',
       },
     ],
     itemSelected: {
-      nombre: "",
+      nombre: '',
       precio: 0,
-      descripcion: "",
+      descripcion: '',
     },
   }),
   methods: {
     add() {
       this.itemSelected = {
-        nombre: "",
+        nombre: '',
         precio: 0,
-        descripcion: "",
-        categoria: "",
+        descripcion: '',
+        categoria: '',
       };
       this.isEdit = false;
-      this.component = "ServicioCRU";
+      this.component = 'ServicioCRU';
       this.dialog = true;
     },
     edit(item) {
       this.itemSelected = Object.assign({}, item);
       this.isEdit = true;
-      this.component = "ServicioCRU";
+      this.component = 'ServicioCRU';
       this.dialog = true;
     },
     deleted(item) {
       this.itemSelected = Object.assign({}, item);
       this.dataDelete = {
-        icon: "mdi-file-remove",
-        title: "Eliminar servicio",
+        icon: 'mdi-file-remove',
+        title: 'Eliminar servicio',
         body: `<h3>¿Desea eliminar el servicio ${item.nombre}?</h3><h4>Los cambios no podrán revertirse.</h4>`,
       };
-      this.component = "Delete";
+      this.component = 'Delete';
       this.dialog = true;
     },
     close() {
@@ -139,16 +152,24 @@ export default {
     async getData() {
       try {
         this.loading = true;
-        const { docs } = await db.collection("servicios").get();
-        const items = [];
+        const { docs: categories } = await db.collection('categorias').get();
+        const { docs } = await db.collection('servicios').get();
 
-        docs.forEach((e) => {
-          const item = e.data();
-          item.id = e.id;
-          items.push(item);
+        this.categories = categories.map((e) => {
+          return {
+            value: e.data().nombre,
+            nombre: e.data().nombre.toUpperCase(),
+          };
         });
 
-        this.items = items;
+        this.categories.unshift({ value: '', nombre: 'TODAS' });
+
+        this.items = docs.map((e) => {
+          return {
+            ...e.data(),
+            id: e.id,
+          };
+        });
       } catch (error) {
         console.warn(error);
       } finally {
@@ -158,27 +179,30 @@ export default {
     async createdItem() {
       await this.getData();
       this.close();
-      Bus.$emit("toast", {
-        type: "success",
-        message: "Servicio creado con éxito!",
+      Bus.$emit('toast', {
+        type: 'success',
+        message: 'Servicio creado con éxito!',
       });
     },
     async updatedItem() {
       await this.getData();
       this.close();
-      Bus.$emit("toast", {
-        type: "success",
-        message: "Servicio actualizado con éxito!",
+      Bus.$emit('toast', {
+        type: 'success',
+        message: 'Servicio actualizado con éxito!',
       });
     },
     async deleteItem() {
       try {
-        await db.collection("servicios").doc(this.itemSelected.id).delete();
+        await db
+          .collection('servicios')
+          .doc(this.itemSelected.id)
+          .delete();
         await this.getData();
         this.close();
-        Bus.$emit("toast", {
-          type: "success",
-          message: "Servicio eliminado con éxito!",
+        Bus.$emit('toast', {
+          type: 'success',
+          message: 'Servicio eliminado con éxito!',
         });
       } catch (error) {
         console.warn(error);
@@ -188,5 +212,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
