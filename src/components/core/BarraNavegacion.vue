@@ -29,6 +29,43 @@
         <v-menu offset-y open-on-hover>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+              class="text-capitalize rounded-pill mx-1 btn__hover d-none"
+              :class="
+                $route.meta.pather === 'categoria'
+                  ? 'activeClass'
+                  : 'black--text'
+              "
+              color="white"
+              depressed
+              v-bind="attrs"
+              v-on="on"
+            >
+              Categorías <v-icon right> mdi-chevron-down </v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              active-class="activeClass"
+              v-for="(item, index) in categorias"
+              :key="index"
+              link
+              :to="{
+                name: 'Categoria',
+                params: {
+                  id: item.id,
+                },
+              }"
+            >
+              <v-list-item-title class="text-capitalize">{{
+                item.nombre
+              }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+
+        <v-menu offset-y open-on-hover>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
               class="text-capitalize rounded-pill mx-1 btn__hover"
               :class="
                 $route.meta.pather === 'pagos' ? 'activeClass' : 'black--text'
@@ -152,41 +189,59 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex';
+import { db } from '../../helpers/Firebase';
 
 export default {
-  name: "BarraNavegacion",
+  name: 'BarraNavegacion',
+  mounted() {
+    this.getCategorias();
+  },
   components: {
-    NavigationDrawer: () => import("./NavigationDrawer"),
+    NavigationDrawer: () => import('./NavigationDrawer'),
   },
   data: () => ({
     drawer: false,
     pagos: [
       {
-        title: "Pago de servicios",
-        to: "PagoServicios",
+        title: 'Pago de servicios',
+        to: 'PagoServicios',
       },
       {
-        title: "Historial de pagos",
-        to: "HistorialPagos",
+        title: 'Historial de pagos',
+        to: 'HistorialPagos',
       },
     ],
     reportes: [
       {
-        title: "Generar reporte",
-        to: "GenerarReporte",
+        title: 'Generar reporte',
+        to: 'GenerarReporte',
       },
       {
-        title: "Estatus reporte",
-        to: "EstatusReporte",
+        title: 'Estatus reporte',
+        to: 'EstatusReporte',
       },
     ],
+    categorias: [],
   }),
   methods: {
-    ...mapActions(["cerrarSession"]),
+    ...mapActions(['cerrarSession']),
+    async getCategorias() {
+      try {
+        const { docs } = await db.collection('categorias').get();
+        this.categorias = docs.map((e) => {
+          const item = {};
+          item.nombre = e.data().nombre;
+          item.id = e.id;
+          return item;
+        });
+      } catch (error) {
+        console.warn(error);
+      }
+    },
   },
   computed: {
-    ...mapState(["session", "rol"]),
+    ...mapState(['session', 'rol']),
   },
 };
 </script>

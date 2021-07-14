@@ -57,25 +57,72 @@
             </p>
           </v-col>
         </v-row>
+
+        <section v-if="!overlay">
+          <article
+            class="white pa-5 mb-5"
+            v-for="(item, index) in categorias"
+            :key="index"
+          >
+            <h2 class="text-uppercase mb-5">{{ item.categoria }}</h2>
+            <p class="text-h6 mb-5" v-if="item.servicios.length === 0">
+              Por el momento no tenemos servicios registrados en esta categoría
+              <span style="font-size:1rem;">&#128549;</span>
+            </p>
+            <v-row v-if="item.servicios.length > 0">
+              <v-col
+                md="3"
+                sm="4"
+                v-for="(servicio, index) in item.servicios"
+                :key="index"
+              >
+                <v-card>
+                  <v-img max-width="100%" :src="servicio.imgUrl"></v-img>
+                  <v-card-title class="text-uppercase text-center">
+                    {{ servicio.nombre }}
+                  </v-card-title>
+                  <v-card-text>
+                    <p class="text-subtitle-1">
+                      Precio: ${{ servicio.precio }}
+                    </p>
+                    <p class="text-subtitle-1 mb-0">
+                      Descripción:
+                    </p>
+                    <p>{{ servicio.descripcion }}</p>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </article>
+        </section>
+        <v-skeleton-loader
+          v-if="overlay"
+          type="date-picker"
+        ></v-skeleton-loader>
       </v-container>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
+import { db } from '../helpers/Firebase';
 
 export default {
-  name: "Home",
-  mounted() {
-    this.datosClima();
+  name: 'Home',
+  async mounted() {
+    await this.datosClima();
+    await this.getCategoria();
   },
   data: () => ({
-    ciudad: "",
-    temperatura: "",
-    sensacionTermica: "",
-    imagen: "",
+    ciudad: '',
+    temperatura: '',
+    sensacionTermica: '',
+    imagen: '',
     show: false,
+    overlay: true,
+    servicios: [],
+    categorias: {},
   }),
   methods: {
     async datosClima() {
@@ -94,13 +141,41 @@ export default {
         console.warn(error);
       }
     },
+    async getCategoria() {
+      try {
+        const { docs } = await db.collection('categorias').get();
+
+        const categorias = docs.map(async (e) => {
+          const item = {};
+          item.categoria = e.data().nombre;
+          item.servicios = await this.getServicios(item.categoria);
+          return item;
+        });
+
+        this.categorias = await Promise.all(categorias);
+        this.overlay = false;
+      } catch (error) {
+        console.warn(error);
+      }
+    },
+    async getServicios(categoria) {
+      try {
+        const { docs } = await db
+          .collection('servicios')
+          .where('categoria', '==', categoria)
+          .get();
+        return docs.map((e) => e.data());
+      } catch (error) {
+        console.warn(error);
+      }
+    },
   },
 };
 </script>
 
 <style lang="css" scoped>
 .img__header {
-  background: url("../assets/header.jpg");
+  background: url('../assets/header.jpg');
   background-image: no-repeat;
   background-image: fixed;
   background-image: center;

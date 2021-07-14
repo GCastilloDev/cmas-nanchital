@@ -1,16 +1,16 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '../views/Home.vue';
 
 Vue.use(VueRouter);
 
 const isAuthenticated = (to, from, next) => {
-  if (sessionStorage.getItem("user") === null) {
-    next({ name: "Login" });
+  if (sessionStorage.getItem('user') === null) {
+    next({ name: 'Login' });
     return;
   }
 
-  const { rol } = JSON.parse(sessionStorage.getItem("user"));
+  const { rol } = JSON.parse(sessionStorage.getItem('user'));
   const rolGuard = to.meta.rol;
 
   if (rol === rolGuard) {
@@ -18,166 +18,173 @@ const isAuthenticated = (to, from, next) => {
     return;
   }
 
-  next({ name: "Error401" });
+  next({ name: 'Error401' });
 };
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
+    path: '/',
+    name: 'Home',
     component: Home,
   },
   {
-    path: "/nosotros",
-    name: "Nosotros",
+    path: '/nosotros',
+    name: 'Nosotros',
     component: () =>
-      import(/* webpackChunkName: "Nosotros" */ "../views/Nosotros.vue"),
+      import(/* webpackChunkName: "Nosotros" */ '../views/Nosotros.vue'),
   },
   {
-    path: "/pagos/servicios",
-    name: "PagoServicios",
+    path: '/pagos/servicios',
+    name: 'PagoServicios',
     component: () =>
       import(
-        /* webpackChunkName: "PagoServicios" */ "../views/PagoServicios.vue"
+        /* webpackChunkName: "PagoServicios" */ '../views/PagoServicios.vue'
       ),
-    meta: { pather: "pagos" },
+    meta: { pather: 'pagos' },
   },
   {
-    path: "/pagos/historial",
-    name: "HistorialPagos",
+    path: '/pagos/historial',
+    name: 'HistorialPagos',
     component: () =>
       import(
-        /* webpackChunkName: "HistorialPagos" */ "../views/HistorialPagos.vue"
+        /* webpackChunkName: "HistorialPagos" */ '../views/HistorialPagos.vue'
       ),
-    meta: { pather: "pagos" },
+    meta: { pather: 'pagos' },
   },
   {
-    path: "/contacto",
-    name: "Contacto",
+    path: '/contacto',
+    name: 'Contacto',
     component: () =>
-      import(/* webpackChunkName: "Contacto" */ "../views/Contacto.vue"),
+      import(/* webpackChunkName: "Contacto" */ '../views/Contacto.vue'),
   },
   {
-    path: "/reportes/generar-reporte",
-    name: "GenerarReporte",
+    path: '/reportes/generar-reporte',
+    name: 'GenerarReporte',
     component: () =>
       import(
-        /* webpackChunkName: "GenerarReporte" */ "../views/GenerarReporte.vue"
+        /* webpackChunkName: "GenerarReporte" */ '../views/GenerarReporte.vue'
       ),
-    meta: { pather: "reportes" },
+    meta: { pather: 'reportes' },
   },
   {
-    path: "/reportes/estatus-reporte",
-    name: "EstatusReporte",
+    path: '/reportes/estatus-reporte',
+    name: 'EstatusReporte',
     component: () =>
       import(
-        /* webpackChunkName: "EstatusReporte" */ "../views/EstatusReporte.vue"
+        /* webpackChunkName: "EstatusReporte" */ '../views/EstatusReporte.vue'
       ),
-    meta: { pather: "reportes" },
+    meta: { pather: 'reportes' },
   },
   {
-    path: "/cuidado-del-agua",
-    name: "CuidadoDelAgua",
+    path: '/cuidado-del-agua',
+    name: 'CuidadoDelAgua',
     component: () =>
       import(
-        /* webpackChunkName: "CuidadoDelAgua" */ "../views/CuidadoDelAgua.vue"
-      ),
-  },
-  {
-    path: "/login",
-    name: "Login",
-    component: () =>
-      import(/* webpackChunkName: "Login" */ "../views/Login.vue"),
-  },
-  {
-    path: "/login/recuperar-contrasena",
-    name: "RecuperarPassword",
-    component: () =>
-      import(
-        /* webpackChunkName: "RecuperarPassword" */ "../views/RecuperarPassword.vue"
+        /* webpackChunkName: "CuidadoDelAgua" */ '../views/CuidadoDelAgua.vue'
       ),
   },
   {
-    path: "/login/registrate",
-    name: "Registrate",
+    path: '/login',
+    name: 'Login',
     component: () =>
-      import(/* webpackChunkName: "Registrate" */ "../views/Registrate.vue"),
+      import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
   },
   {
-    path: "/admin",
-    name: "Admin",
+    path: '/login/recuperar-contrasena',
+    name: 'RecuperarPassword',
     component: () =>
-      import(/* webpackChunkName: "Admin" */ "../views/Admin.vue"),
+      import(
+        /* webpackChunkName: "RecuperarPassword" */ '../views/RecuperarPassword.vue'
+      ),
+  },
+  {
+    path: '/login/registrate',
+    name: 'Registrate',
+    component: () =>
+      import(/* webpackChunkName: "Registrate" */ '../views/Registrate.vue'),
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () =>
+      import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
     meta: {
-      rol: "admin",
+      rol: 'admin',
     },
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/admin/usuarios",
-    name: "Usuarios",
+    path: '/admin/usuarios',
+    name: 'Usuarios',
     component: () =>
-      import(/* webpackChunkName: "Usuarios" */ "../views/Usuarios.vue"),
+      import(/* webpackChunkName: "Usuarios" */ '../views/Usuarios.vue'),
     meta: {
-      rol: "admin",
+      rol: 'admin',
     },
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/admin/categorias",
-    name: "Categorias",
+    path: '/admin/categorias',
+    name: 'Categorias',
     component: () =>
-      import(/* webpackChunkName: "Categorias" */ "../views/Categorias.vue"),
+      import(/* webpackChunkName: "Categorias" */ '../views/Categorias.vue'),
     meta: {
-      rol: "admin",
+      rol: 'admin',
     },
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/admin/servicios",
-    name: "Servicios",
+    path: '/admin/servicios',
+    name: 'Servicios',
     component: () =>
-      import(/* webpackChunkName: "Servicios" */ "../views/Servicios.vue"),
+      import(/* webpackChunkName: "Servicios" */ '../views/Servicios.vue'),
     meta: {
-      rol: "admin",
+      rol: 'admin',
     },
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/admin/roles",
-    name: "Roles",
+    path: '/admin/roles',
+    name: 'Roles',
     component: () =>
-      import(/* webpackChunkName: "Roles" */ "../views/Roles.vue"),
+      import(/* webpackChunkName: "Roles" */ '../views/Roles.vue'),
     meta: {
-      rol: "admin",
+      rol: 'admin',
     },
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/usuario",
-    name: "User",
-    component: () => import(/* webpackChunkName: "User" */ "../views/User.vue"),
+    path: '/usuario',
+    name: 'User',
+    component: () => import(/* webpackChunkName: "User" */ '../views/User.vue'),
     meta: {
-      rol: "user",
+      rol: 'user',
     },
     beforeEnter: isAuthenticated,
   },
   {
-    path: "/401",
-    name: "Error401",
+    path: '/categoria/:id',
+    name: 'Categoria',
     component: () =>
-      import(/* webpackChunkName: "Error401" */ "../views/401.vue"),
+      import(/* webpackChunkName: "Categoria" */ '../views/Categoria.vue'),
+    meta: { pather: 'categoria' },
   },
   {
-    path: "*",
-    name: "Error404",
+    path: '/401',
+    name: 'Error401',
     component: () =>
-      import(/* webpackChunkName: "Error404" */ "../views/404.vue"),
+      import(/* webpackChunkName: "Error401" */ '../views/401.vue'),
+  },
+  {
+    path: '*',
+    name: 'Error404',
+    component: () =>
+      import(/* webpackChunkName: "Error404" */ '../views/404.vue'),
   },
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   base: process.env.BASE_URL,
   routes,
 });
