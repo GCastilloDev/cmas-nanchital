@@ -174,6 +174,19 @@
           @click="cerrarSession"
           >Cerrar sesión</v-btn
         >
+
+        <v-btn
+          @click="$router.push({ name: 'Cart' })"
+          active-class="activeClass"
+          class="rounded-pill text-capitalize rounded-pill mx-1 btn__hover"
+          color="#01AB55"
+          dark
+          depressed
+        >
+          <v-badge color="orange" :content="cartCount.toString()">
+            <v-icon>mdi-cart</v-icon></v-badge
+          >
+        </v-btn>
       </div>
       <v-app-bar-nav-icon
         class="d-lg-none"
@@ -201,6 +214,7 @@ export default {
     NavigationDrawer: () => import('./NavigationDrawer'),
   },
   data: () => ({
+    prueba: 2,
     drawer: false,
     pagos: [
       {
@@ -241,7 +255,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['session', 'rol']),
+    ...mapState(['session', 'rol', 'cartCount']),
   },
 };
 </script>

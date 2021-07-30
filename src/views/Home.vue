@@ -65,7 +65,7 @@
             :key="index"
           >
             <h2 class="text-uppercase mb-5">{{ item.categoria }}</h2>
-            <p class="text-h6 mb-5" v-if="item.servicios.length === 0">
+            <p class="text-subtile mb-5" v-if="item.servicios.length === 0">
               Por el momento no tenemos servicios registrados en esta categoría
               <span style="font-size:1rem;">&#128549;</span>
             </p>
@@ -77,7 +77,13 @@
                 :key="index"
               >
                 <v-card>
-                  <v-img max-width="100%" :src="servicio.imgUrl"></v-img>
+                  <figure class="pa-5">
+                    <v-img
+                      contain
+                      max-height="200px"
+                      :src="servicio.imgUrl"
+                    ></v-img>
+                  </figure>
                   <v-card-title class="text-uppercase text-center">
                     {{ servicio.nombre }}
                   </v-card-title>
@@ -89,6 +95,22 @@
                       Descripción:
                     </p>
                     <p>{{ servicio.descripcion }}</p>
+
+                    <v-btn
+                      class="mb-3 text-none"
+                      block
+                      color="primary"
+                      @click="addToCart(servicio)"
+                      >Agregar al carrito</v-btn
+                    >
+                    <v-btn
+                      class="text-none"
+                      block
+                      color="purple"
+                      dark
+                      @click="goToCart(servicio)"
+                      >Comprar ahora!</v-btn
+                    >
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -101,12 +123,18 @@
         ></v-skeleton-loader>
       </v-container>
     </div>
+    <v-snackbar v-model="snackbar" color="primary">
+      Producto
+      <span class="font-weight-bold">{{ snackbarMessage }}</span> agregado a su
+      carrito con exito!
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { db } from '../helpers/Firebase';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'Home',
@@ -115,6 +143,8 @@ export default {
     await this.getCategoria();
   },
   data: () => ({
+    snackbar: false,
+    snackbarMessage: '',
     ciudad: '',
     temperatura: '',
     sensacionTermica: '',
@@ -125,6 +155,7 @@ export default {
     categorias: {},
   }),
   methods: {
+    ...mapActions(['agregarCarrito']),
     async datosClima() {
       try {
         const { data } = await axios.get(
@@ -168,6 +199,17 @@ export default {
       } catch (error) {
         console.warn(error);
       }
+    },
+    addToCart(item) {
+      this.agregarCarrito(item);
+      this.snackbarMessage = item.nombre;
+      this.snackbar = true;
+    },
+    goToCart(item) {
+      this.agregarCarrito(item);
+      this.snackbarMessage = item.nombre;
+      this.snackbar = true;
+      this.$router.push({ name: 'Cart' });
     },
   },
 };
