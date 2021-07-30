@@ -29,7 +29,7 @@
             ></v-text-field>
           </div>
           <v-row>
-            <v-col cols="12" sm="6">
+            <v-col cols="12" sm="12">
               <v-btn
                 :loading="loading"
                 @click="iniciarSesion"
@@ -42,6 +42,7 @@
               >
             </v-col>
             <v-col
+              v-if="false"
               cols="12"
               sm="6"
               class="d-flex align-end justify-sm-end justify-center"
@@ -80,7 +81,7 @@ export default {
     loading: false,
     rol: {
       admin: 'Admin',
-      user: 'User',
+      user: 'Cart',
     },
   }),
   methods: {
@@ -109,7 +110,6 @@ export default {
       data.type = 'success';
 
       EventBus.$emit('toast', data);
-      console.log(this.rol);
       this.$router.push({ name: this.rol[ruta] });
     },
     async obtenerUsuario(correo, password) {
