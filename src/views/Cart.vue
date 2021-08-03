@@ -1,6 +1,16 @@
 <template>
   <v-container>
-    <h1>Cart</h1>
+    <div class="d-flex justify-space-between">
+      <h1>Cart</h1>
+      <v-btn
+        @click="$router.push({ name: 'MisPedidos' })"
+        color="primary"
+        depressed
+      >
+        <v-icon left>mdi-format-list-text</v-icon>
+        Mis pedidos</v-btn
+      >
+    </div>
 
     <div v-if="cartCount > 0 && $route.query.status === undefined">
       <v-card class="pa-3 mb-5" v-for="item in cart" :key="item.id">
@@ -80,76 +90,95 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import axios from 'axios';
+  import { mapState, mapActions } from 'vuex';
+  import axios from 'axios';
+  import { db } from '../helpers/Firebase';
 
-export default {
-  name: 'Cart',
-  mounted() {
-    console.log(this.$route);
-  },
-  data: () => ({
-    loading: false,
-  }),
-  computed: {
-    ...mapState(['cart', 'cartCount']),
-    cartComputed() {
-      console.log(this.cart);
-      const prueba = Object.assign({}, this.cart);
-      return prueba;
+  export default {
+    name: 'Cart',
+    mounted() {
+      console.log(this.$route);
     },
-    total() {
-      let total = 0;
-      for (const property in this.cart) {
-        let subtotal =
-          this.cart[property].quantity * this.cart[property].precio;
-        total += subtotal;
-      }
-
-      return total;
-    },
-  },
-  methods: {
-    ...mapActions(['agregarCarrito', 'disminuirProducto', 'eliminarProducto']),
-    async finalizarCompra() {
-      this.loading = true;
-      if (sessionStorage.user === undefined) {
-        this.loading = false;
-        this.$router.push({ name: 'Login' });
-        return;
-      }
-
-      try {
-        this.loading = true;
-        const dataSend = {};
-        dataSend.items = [];
-        dataSend.user = {};
-        dataSend.user.email = JSON.parse(sessionStorage.user).correo;
-        dataSend.user.name = JSON.parse(sessionStorage.user).nombre;
-        dataSend.user.surname = JSON.parse(sessionStorage.user).apellidos;
-
+    data: () => ({
+      loading: false,
+    }),
+    computed: {
+      ...mapState(['cart', 'cartCount']),
+      cartComputed() {
+        console.log(this.cart);
+        const prueba = Object.assign({}, this.cart);
+        return prueba;
+      },
+      total() {
+        let total = 0;
         for (const property in this.cart) {
-          const product = {};
-          product.title = this.cart[property].nombre;
-          product.unit_price = this.cart[property].precio;
-          product.quantity = this.cart[property].quantity;
-
-          dataSend.items.push(product);
+          let subtotal =
+            this.cart[property].quantity * this.cart[property].precio;
+          total += subtotal;
         }
 
-        const { data } = await axios.post(
-          'https://cmas-back.herokuapp.com/',
-          dataSend
-        );
-
-        window.open(data.linkDePago, '_self');
-        this.loading = false;
-      } catch (error) {
-        console.log(error);
-      }
+        return total;
+      },
     },
-  },
-};
+    methods: {
+      ...mapActions([
+        'agregarCarrito',
+        'disminuirProducto',
+        'eliminarProducto',
+      ]),
+      async finalizarCompra() {
+        this.loading = true;
+        if (sessionStorage.user === undefined) {
+          this.loading = false;
+          this.$router.push({ name: 'Login' });
+          return;
+        }
+
+        try {
+          this.loading = true;
+          const dataSend = {};
+          dataSend.items = [];
+          dataSend.user = {};
+          dataSend.user.email = JSON.parse(sessionStorage.user).correo;
+          dataSend.user.name = JSON.parse(sessionStorage.user).nombre;
+          dataSend.user.surname = JSON.parse(sessionStorage.user).apellidos;
+
+          for (const property in this.cart) {
+            const product = {};
+            product.title = this.cart[property].nombre;
+            product.unit_price = this.cart[property].precio;
+            product.quantity = this.cart[property].quantity;
+
+            dataSend.items.push(product);
+          }
+
+          const user = JSON.parse(sessionStorage.user);
+          const userID = user.id;
+          const order = {
+            userID,
+            user,
+            products: dataSend.items,
+            createdAt: new Date().getTime(),
+          };
+
+          const docRef = await db.collection('orders').add(order);
+
+          dataSend.idFirebase = docRef.id;
+
+          const { data } = await axios.post(
+            // 'https://cmas-back.herokuapp.com/',
+            'http://localhost:3000/',
+            dataSend
+          );
+
+          window.open(data.linkDePago, '_self');
+          this.loading = false;
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    },
+  };
 </script>
 
 <style lang="scss" scoped></style>

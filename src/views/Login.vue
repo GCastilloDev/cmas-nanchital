@@ -65,78 +65,79 @@
 </template>
 
 <script>
-//EventBus
-import EventBus from '../helpers/EventBus';
+  //EventBus
+  import EventBus from '../helpers/EventBus';
 
-//DB
-import { db } from '../helpers/Firebase';
+  //DB
+  import { db } from '../helpers/Firebase';
 
-import { mapActions } from 'vuex';
+  import { mapActions } from 'vuex';
 
-export default {
-  name: 'Login',
-  data: () => ({
-    correo: '',
-    password: '',
-    loading: false,
-    rol: {
-      admin: 'Admin',
-      user: 'Cart',
-    },
-  }),
-  methods: {
-    ...mapActions(['sessionInit']),
-    async iniciarSesion() {
-      this.loading = true;
-      const data = {};
-      const user = await this.obtenerUsuario(this.correo, this.password);
+  export default {
+    name: 'Login',
+    data: () => ({
+      correo: '',
+      password: '',
+      loading: false,
+      rol: {
+        admin: 'Admin',
+        user: 'Cart',
+      },
+    }),
+    methods: {
+      ...mapActions(['sessionInit']),
+      async iniciarSesion() {
+        this.loading = true;
+        const data = {};
+        const user = await this.obtenerUsuario(this.correo, this.password);
 
-      if (user.empty) {
-        data.message = 'Credenciales invalidas, intente de nuevo!';
-        data.type = 'error';
+        if (user.empty) {
+          data.message = 'Credenciales invalidas, intente de nuevo!';
+          data.type = 'error';
+          EventBus.$emit('toast', data);
+          this.loading = false;
+          return;
+        }
+
+        const id = user.docs[0].id;
+        const userData = user.docs[0].data();
+        delete userData.password;
+
+        const ruta = userData.rol;
+
+        this.guardarSesion({ id, ...userData });
+
+        data.message = 'Inicio de sesión exitosa!';
+        data.type = 'success';
+
         EventBus.$emit('toast', data);
-        this.loading = false;
-        return;
-      }
+        this.$router.push({ name: this.rol[ruta] });
+      },
+      async obtenerUsuario(correo, password) {
+        try {
+          const user = await db
+            .collection('usuarios')
+            .where('correo', '==', correo)
+            .where('password', '==', password)
+            .limit(1)
+            .get();
 
-      const userData = user.docs[0].data();
-      delete userData.password;
-
-      const ruta = userData.rol;
-
-      this.guardarSesion(userData);
-
-      data.message = 'Inicio de sesión exitosa!';
-      data.type = 'success';
-
-      EventBus.$emit('toast', data);
-      this.$router.push({ name: this.rol[ruta] });
+          return user;
+        } catch (error) {
+          console.warn(error);
+        }
+      },
+      guardarSesion(user) {
+        sessionStorage.setItem('user', JSON.stringify(user));
+        this.sessionInit(user);
+      },
     },
-    async obtenerUsuario(correo, password) {
-      try {
-        const user = await db
-          .collection('usuarios')
-          .where('correo', '==', correo)
-          .where('password', '==', password)
-          .limit(1)
-          .get();
-
-        return user;
-      } catch (error) {
-        console.warn(error);
-      }
-    },
-    guardarSesion(user) {
-      sessionStorage.setItem('user', JSON.stringify(user));
-      this.sessionInit(user);
-    },
-  },
-};
+  };
 </script>
 
 <style lang="scss" scoped>
-.login {
-  background-color: #f4f6f5;
-  min-height: 100%;
-}
+  .login {
+    background-color: #f4f6f5;
+    min-height: 100%;
+  }
 </style>

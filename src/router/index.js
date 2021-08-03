@@ -40,6 +40,12 @@ const routes = [
       import(/* webpackChunkName: "Nosotros" */ '../views/Cart.vue'),
   },
   {
+    path: '/cart/mis-pedidos',
+    name: 'MisPedidos',
+    component: () =>
+      import(/* webpackChunkName: "Nosotros" */ '../views/MisPedidos.vue'),
+  },
+  {
     path: '/pagos/servicios',
     name: 'PagoServicios',
     component: () =>
