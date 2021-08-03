@@ -166,8 +166,8 @@
           dataSend.idFirebase = docRef.id;
 
           const { data } = await axios.post(
-            // 'https://cmas-back.herokuapp.com/',
-            'http://localhost:3000/',
+            'https://cmas-back.herokuapp.com/',
+            // 'http://localhost:3000/',
             dataSend
           );
 
