@@ -60,7 +60,7 @@
           color="primary"
           @click="finalizarCompra"
           :loading="loading"
-          >Finalizar compra</v-btn
+          >Guardar pedido</v-btn
         >
       </div>
     </div>
@@ -86,12 +86,16 @@
     <div class="text-right">
       <router-link to="/">Seguir comprando</router-link>
     </div>
+
+    <v-snackbar v-model="snackbar" color="primary">
+      Pedido guardado con éxito! 😄😄
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
   import { mapState, mapActions } from 'vuex';
-  import axios from 'axios';
+  // import axios from 'axios';
   import { db } from '../helpers/Firebase';
 
   export default {
@@ -101,6 +105,7 @@
     },
     data: () => ({
       loading: false,
+      snackbar: false,
     }),
     computed: {
       ...mapState(['cart', 'cartCount']),
@@ -125,6 +130,7 @@
         'agregarCarrito',
         'disminuirProducto',
         'eliminarProducto',
+        'vaciarCarrito',
       ]),
       async finalizarCompra() {
         this.loading = true;
@@ -161,18 +167,21 @@
             createdAt: new Date().getTime(),
           };
 
-          const docRef = await db.collection('orders').add(order);
+          await db.collection('orders').add(order);
 
-          dataSend.idFirebase = docRef.id;
+          // dataSend.idFirebase = docRef.id;
 
-          const { data } = await axios.post(
-            'https://cmas-back.herokuapp.com/',
-            // 'http://localhost:3000/',
-            dataSend
-          );
+          // const { data } = await axios.post(
+          //   'https://cmas-back.herokuapp.com/',
+          //   // 'http://localhost:3000/',
+          //   dataSend
+          // );
 
-          window.open(data.linkDePago, '_self');
+          // window.open(data.linkDePago, '_self');
           this.loading = false;
+          this.snackbar = true;
+          this.vaciarCarrito();
+          this.$router.push({ name: 'MisPedidos' });
         } catch (error) {
           console.log(error);
         }

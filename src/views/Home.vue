@@ -100,7 +100,7 @@
                       class="mb-3 text-none"
                       block
                       color="primary"
-                      @click="addToCart(servicio)"
+                      @click="irDetalle(servicio)"
                       >Agregar al carrito</v-btn
                     >
                     <v-btn
@@ -132,113 +132,122 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { db } from '../helpers/Firebase';
-import { mapActions } from 'vuex';
+  import axios from 'axios';
+  import { db } from '../helpers/Firebase';
+  import { mapActions } from 'vuex';
 
-export default {
-  name: 'Home',
-  async mounted() {
-    await this.datosClima();
-    await this.getCategoria();
-  },
-  data: () => ({
-    snackbar: false,
-    snackbarMessage: '',
-    ciudad: '',
-    temperatura: '',
-    sensacionTermica: '',
-    imagen: '',
-    show: false,
-    overlay: true,
-    servicios: [],
-    categorias: {},
-  }),
-  methods: {
-    ...mapActions(['agregarCarrito']),
-    async datosClima() {
-      try {
-        const { data } = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=nanchital&units=metric&lang=es&appid=4dab257d25d0f100b931220c089613dc`
-        );
+  export default {
+    name: 'Home',
+    async mounted() {
+      await this.datosClima();
+      await this.getCategoria();
+    },
+    data: () => ({
+      snackbar: false,
+      snackbarMessage: '',
+      ciudad: '',
+      temperatura: '',
+      sensacionTermica: '',
+      imagen: '',
+      show: false,
+      overlay: true,
+      servicios: [],
+      categorias: {},
+    }),
+    methods: {
+      ...mapActions(['agregarCarrito']),
+      async datosClima() {
+        try {
+          const { data } = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?q=nanchital&units=metric&lang=es&appid=4dab257d25d0f100b931220c089613dc`
+          );
 
-        this.ciudad = data.name;
-        this.temperatura = `${data.main.temp}°С`;
-        this.sensacionTermica = `${data.main.feels_like}°С`;
-        this.imagen = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+          this.ciudad = data.name;
+          this.temperatura = `${data.main.temp}°С`;
+          this.sensacionTermica = `${data.main.feels_like}°С`;
+          this.imagen = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
 
-        this.show = true;
-      } catch (error) {
-        console.warn(error);
-      }
-    },
-    async getCategoria() {
-      try {
-        const { docs } = await db.collection('categorias').get();
+          this.show = true;
+        } catch (error) {
+          console.warn(error);
+        }
+      },
+      async getCategoria() {
+        try {
+          const { docs } = await db.collection('categorias').get();
+          const categorias = docs.map(async (e) => {
+            const item = {};
+            item.categoria = e.data().nombre;
+            item.servicios = await this.getServicios(item.categoria);
+            return item;
+          });
 
-        const categorias = docs.map(async (e) => {
-          const item = {};
-          item.categoria = e.data().nombre;
-          item.servicios = await this.getServicios(item.categoria);
-          return item;
-        });
-
-        this.categorias = await Promise.all(categorias);
-        this.overlay = false;
-      } catch (error) {
-        console.warn(error);
-      }
+          this.categorias = await Promise.all(categorias);
+          this.overlay = false;
+        } catch (error) {
+          console.warn(error);
+        }
+      },
+      async getServicios(categoria) {
+        try {
+          const { docs } = await db
+            .collection('servicios')
+            .where('categoria', '==', categoria)
+            .get();
+          return docs.map((e) => {
+            const data = {
+              ...e.data(),
+              id: e.id,
+            };
+            return data;
+          });
+        } catch (error) {
+          console.warn(error);
+        }
+      },
+      irDetalle(servicio) {
+        const id = servicio.id;
+        this.$router.push({ name: 'Detail', params: { id } });
+      },
+      addToCart(item) {
+        this.agregarCarrito(item);
+        this.snackbarMessage = item.nombre;
+        this.snackbar = true;
+      },
+      goToCart(item) {
+        this.agregarCarrito(item);
+        this.snackbarMessage = item.nombre;
+        this.snackbar = true;
+        this.$router.push({ name: 'Cart' });
+      },
     },
-    async getServicios(categoria) {
-      try {
-        const { docs } = await db
-          .collection('servicios')
-          .where('categoria', '==', categoria)
-          .get();
-        return docs.map((e) => e.data());
-      } catch (error) {
-        console.warn(error);
-      }
-    },
-    addToCart(item) {
-      this.agregarCarrito(item);
-      this.snackbarMessage = item.nombre;
-      this.snackbar = true;
-    },
-    goToCart(item) {
-      this.agregarCarrito(item);
-      this.snackbarMessage = item.nombre;
-      this.snackbar = true;
-      this.$router.push({ name: 'Cart' });
-    },
-  },
-};
+  };
 </script>
 
 <style lang="css" scoped>
-.img__header {
-  background: url('../assets/header.jpg');
-  background-image: no-repeat;
-  background-image: fixed;
-  background-image: center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
-  height: 80vh;
-  text-align: right;
-}
+  .img__header {
+    background: url('../assets/header.jpg');
+    background-image: no-repeat;
+    background-image: fixed;
+    background-image: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 80vh;
+    text-align: right;
+  }
 
-.img__content {
-  background: rgba(0, 0, 0, 0.5);
-  height: 100%;
-}
+  .img__content {
+    background: rgba(0, 0, 0, 0.5);
+    height: 100%;
+  }
 
-.loading__content {
-  height: 97%;
-}
+  .loading__content {
+    height: 97%;
+  }
 
-.container__bg {
-  background-color: #f4f6f5;
-}
+  .container__bg {
+    background-color: #f4f6f5;
+  }
 </style>

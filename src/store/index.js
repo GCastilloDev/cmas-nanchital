@@ -48,6 +48,10 @@ export default new Vuex.Store({
       delete state.cart[payload.id];
       state.cart = Object.assign({}, state.cart);
     },
+    unsetCart(state) {
+      state.cart = {};
+      state.cartCount = 0;
+    },
   },
   actions: {
     sessionInit({ commit }, payload) {
@@ -72,6 +76,9 @@ export default new Vuex.Store({
     },
     eliminarProducto({ commit }, producto) {
       commit('deleteProduct', producto);
+    },
+    vaciarCarrito({ commit }) {
+      commit('unsetCart');
     },
   },
   modules: {},
