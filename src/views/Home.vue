@@ -59,63 +59,63 @@
         </v-row>
 
         <section v-if="!overlay">
-          <article
-            class="white pa-5 mb-5"
-            v-for="(item, index) in categorias"
-            :key="index"
-          >
-            <h2 class="text-uppercase mb-5">{{ item.categoria }}</h2>
-            <p class="text-subtile mb-5" v-if="item.servicios.length === 0">
+          <div v-for="(item, index) in categorias" :key="index">
+            <article class="white pa-5 mb-5" v-if="item.servicios.length > 0">
+              <h2 class="text-uppercase mb-5" v-if="item.servicios.length > 0">
+                {{ item.categoria }}
+              </h2>
+              <!-- <p class="text-subtile mb-5" v-if="item.servicios.length === 0">
               Por el momento no tenemos servicios registrados en esta categoría
               <span style="font-size:1rem;">&#128549;</span>
-            </p>
-            <v-row v-if="item.servicios.length > 0">
-              <v-col
-                md="3"
-                sm="4"
-                v-for="(servicio, index) in item.servicios"
-                :key="index"
-              >
-                <v-card>
-                  <figure class="pa-5">
-                    <v-img
-                      contain
-                      max-height="200px"
-                      :src="servicio.imgUrl"
-                    ></v-img>
-                  </figure>
-                  <v-card-title class="text-uppercase text-center">
-                    {{ servicio.nombre }}
-                  </v-card-title>
-                  <v-card-text>
-                    <p class="text-subtitle-1">
-                      Precio: ${{ servicio.precio }}
-                    </p>
-                    <p class="text-subtitle-1 mb-0">
-                      Descripción:
-                    </p>
-                    <p>{{ servicio.descripcion }}</p>
+            </p> -->
+              <v-row v-if="item.servicios.length > 0">
+                <v-col
+                  md="3"
+                  sm="4"
+                  v-for="(servicio, index) in item.servicios"
+                  :key="index"
+                >
+                  <v-card>
+                    <figure class="pa-5">
+                      <v-img
+                        contain
+                        max-height="200px"
+                        :src="servicio.imgUrl"
+                      ></v-img>
+                    </figure>
+                    <v-card-title class="text-uppercase text-center">
+                      {{ servicio.nombre }}
+                    </v-card-title>
+                    <v-card-text>
+                      <p class="text-subtitle-1">
+                        Precio: ${{ servicio.precio }}
+                      </p>
+                      <p class="text-subtitle-1 mb-0">
+                        Descripción:
+                      </p>
+                      <p>{{ servicio.descripcion }}</p>
 
-                    <v-btn
-                      class="mb-3 text-none"
-                      block
-                      color="primary"
-                      @click="irDetalle(servicio)"
-                      >Agregar al carrito</v-btn
-                    >
-                    <v-btn
-                      class="text-none"
-                      block
-                      color="purple"
-                      dark
-                      @click="goToCart(servicio)"
-                      >Comprar ahora!</v-btn
-                    >
-                  </v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </article>
+                      <v-btn
+                        class="mb-3 text-none"
+                        block
+                        color="primary"
+                        @click="irDetalle(servicio)"
+                        >Agregar al carrito</v-btn
+                      >
+                      <v-btn
+                        class="text-none"
+                        block
+                        color="purple"
+                        dark
+                        @click="goToCart(servicio)"
+                        >Comprar ahora!</v-btn
+                      >
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </article>
+          </div>
         </section>
         <v-skeleton-loader
           v-if="overlay"
